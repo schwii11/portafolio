@@ -17,9 +17,9 @@
     element.addEventListener('pointerenter',()=>element.classList.add('is-chaotic'));
     element.addEventListener('pointerleave',()=>element.classList.remove('is-chaotic'));
   }
-  addEventListener('DOMContentLoaded',()=>document.querySelectorAll('h2,.project-next span').forEach(wrap));
+  addEventListener('DOMContentLoaded',()=>document.querySelectorAll('#focus-title,#method-title').forEach(wrap));
   addEventListener('DOMContentLoaded',()=>{
-    const elements=[...document.querySelectorAll('.about-hero>*,.about-block>*,.about-columns article')];
+    const elements=[...document.querySelectorAll('.about-opening>*,.about-focus>*,.about-method>*,.about-closing>*')];
     elements.forEach((element,index)=>{element.classList.add('scroll-enter');element.style.setProperty('--enter-delay',`${index%3*80}ms`)});
     if(matchMedia('(prefers-reduced-motion: reduce)').matches){elements.forEach(element=>element.classList.add('is-visible'));return}
     const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-visible');observer.unobserve(entry.target)}}),{threshold:.12,rootMargin:'0px 0px -8% 0px'});

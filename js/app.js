@@ -10,12 +10,8 @@ const translations = {
     explore: 'EXPLORAR PROYECTOS', workTitle: 'WORK.',
     workIntro: 'Siete proyectos entre moda, materialidad y experiencias digitales, explicados directamente en el recorrido principal.',
     aboutTitle: 'ABOUT.',
-    portraitPending: 'FOTOGRAFÍA PERSONAL / PENDIENTE',
     aboutCopy: 'Soy Katalina Ríos, estudiante de Diseño con mención en Sistema Moda. Me interesan la experimentación textil, los biomateriales, el cuerpo, la materialidad y las experiencias digitales.',
-    aboutPending: 'Metodología, trayectoria, herramientas y CV pendientes de completar con información confirmada.',
-    aboutSoon: 'ABOUT COMPLETO / PRÓXIMAMENTE',
-    contactTitle: 'CONTACT.', emailPending: 'CORREO / PENDIENTE',
-    mediaPending: 'IMAGEN PENDIENTE', contentPending: 'CONTENIDO PENDIENTE', documenting: 'DOCUMENTACIÓN EN PROCESO'
+    contactTitle: 'CONTACT.'
   },
   en: {
     navIndex: 'INDEX', navWork: 'WORK', navAbout: 'ABOUT', navContact: 'CONTACT',
@@ -25,12 +21,8 @@ const translations = {
     explore: 'EXPLORE PROJECTS', workTitle: 'WORK.',
     workIntro: 'Seven projects spanning fashion, materiality and digital experiences, explained directly in the main journey.',
     aboutTitle: 'ABOUT.',
-    portraitPending: 'PORTRAIT / PENDING',
     aboutCopy: 'I am Katalina Ríos, a Design student specialising in Fashion Systems. My interests include textile experimentation, biomaterials, the body, materiality and digital experiences.',
-    aboutPending: 'Methodology, experience, tools and CV pending confirmed information.',
-    aboutSoon: 'FULL ABOUT / COMING SOON',
-    contactTitle: 'CONTACT.', emailPending: 'EMAIL / PENDING',
-    mediaPending: 'IMAGE PENDING', contentPending: 'CONTENT PENDING', documenting: 'DOCUMENTATION IN PROGRESS'
+    contactTitle: 'CONTACT.'
   }
 };
 
@@ -50,10 +42,10 @@ function renderProjects() {
       </div>` : `
       <div class="project-story__digital" aria-label="Proyecto digital ${project.title}">
         <p>${project.title}</p><span>${project.discipline}</span>
-        <a href="${project.demo}" target="_blank" rel="noreferrer">ABRIR EXPERIENCIA ↗</a>
+        <a href="${project.demo}" target="_blank" rel="noreferrer">ABRIR EXPERIENCIA</a>
       </div>`;
     return `
-      <article class="project-row project-story project-story--${project.category} reveal" data-category="${project.category}" data-project="${project.id}">
+      <article class="project-row project-story project-story--${project.category} reveal" data-category="${project.category}" data-project="${project.id}" data-title="${project.title}">
         <header class="project-story__header">
           <p class="project-story__index mono">${project.number} / 07</p>
           <div class="project-row__title"><p class="mono">${project.discipline}${project.year ? ` / ${project.year}` : ''}</p><h3>${project.title}</h3></div>
@@ -66,32 +58,29 @@ function renderProjects() {
   };
   list.innerHTML = projects.map(card).join('');
   prepareChaosType(list);
+  prepareImageMotion(list);
   observeReveals();
 }
 
 function prepareImageMotion(root = document) {
   if (reducedMotion || !matchMedia('(pointer:fine)').matches) return;
-  root.querySelectorAll('.project-row').forEach(row => {
-    const media = row.querySelector('.project-row__media.has-image');
+  root.querySelectorAll('.project-story').forEach(row => {
+    const media = row.querySelector('.project-story__visual');
     if (!media) return;
     row.addEventListener('pointermove', event => {
       const rect = media.getBoundingClientRect();
       const x = Math.max(-.5, Math.min(.5, (event.clientX - rect.left) / rect.width - .5));
       const y = Math.max(-.5, Math.min(.5, (event.clientY - rect.top) / rect.height - .5));
-      media.style.setProperty('--image-x', `${x * 20}px`);
-      media.style.setProperty('--image-y', `${y * 14}px`);
-      media.style.setProperty('--image-r', `${x * 2.4}deg`);
-      media.style.setProperty('--frame-x', `${x * 12}px`);
-      media.style.setProperty('--frame-y', `${y * 9}px`);
-      media.style.setProperty('--frame-r', `${x * 4}deg`);
+      media.style.setProperty('--image-x', `${x * 12}px`);
+      media.style.setProperty('--image-y', `${y * 8}px`);
+      media.style.setProperty('--detail-x', `${x * -18}px`);
+      media.style.setProperty('--detail-y', `${y * -12}px`);
     });
     row.addEventListener('pointerleave', () => {
       media.style.setProperty('--image-x', '0px');
       media.style.setProperty('--image-y', '0px');
-      media.style.setProperty('--image-r', '0deg');
-      media.style.setProperty('--frame-x', '0px');
-      media.style.setProperty('--frame-y', '0px');
-      media.style.setProperty('--frame-r', '0deg');
+      media.style.setProperty('--detail-x', '0px');
+      media.style.setProperty('--detail-y', '0px');
     });
   });
 }

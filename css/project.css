@@ -180,3 +180,99 @@
   .project-narrative h2,
   .project-next span{line-height:.94}
 }
+
+/* Reportaje editorial: más rojo, fotografía próxima y movimiento con propósito. */
+.project-nav,.project-hero__number,.project-hero__meta,.project-links,
+.project-kicker,.project-credits{font-family:var(--body)}
+.project-nav,.project-links,.project-kicker{font-weight:600;letter-spacing:.095em}
+.project-hero{isolation:isolate}
+.project-hero::before{
+  content:attr(data-project);
+  position:absolute;
+  z-index:-1;
+  right:-.08em;
+  bottom:-.1em;
+  color:rgba(225,39,41,.08);
+  font:italic 400 clamp(8rem,22vw,24rem)/.7 var(--display);
+  text-transform:uppercase;
+  pointer-events:none;
+}
+.project-hero h1{letter-spacing:-.075em}
+.project-hero h1 .chaos-letter:nth-child(4n){color:var(--project-accent)}
+.project-hero__lead{position:relative;padding-left:clamp(18px,2vw,30px)}
+.project-hero__lead::before{content:"";position:absolute;left:0;top:.15em;bottom:.15em;width:3px;background:var(--project-accent)}
+.project-links a{font-weight:600}
+
+.project-gallery{position:relative}
+.project-gallery::before{
+  content:"MATERIA / PROCESO / CUERPO";
+  position:absolute;
+  right:var(--pad);
+  top:2rem;
+  color:var(--project-accent);
+  font:italic 400 clamp(1.15rem,2vw,1.9rem)/1 var(--display);
+  transform:rotate(3deg);
+}
+.project-image,.project-video,.project-live{
+  opacity:0;
+  transform:translateY(42px);
+  transition:opacity .75s ease,transform .9s cubic-bezier(.16,1,.3,1);
+}
+.project-image.is-in-view,.project-video.is-in-view,.project-live.is-in-view{opacity:1;transform:none}
+.project-image__visual{--focus-x:0px;--focus-y:0px;position:relative}
+.project-image__visual img{transition:transform .75s cubic-bezier(.16,1,.3,1),filter .45s ease}
+.project-image__visual:hover img{transform:translate3d(var(--focus-x),var(--focus-y),0) scale(1.018);filter:saturate(1.06) contrast(1.025)}
+.project-image figcaption{position:relative;padding-left:1rem;border-left:2px solid var(--project-accent)}
+.project-image figcaption span{font-family:var(--body);font-weight:600}
+.project-image figcaption p{font-size:1rem}
+
+.project-narrative{position:relative;padding-top:clamp(62px,7vw,98px);padding-bottom:clamp(62px,7vw,100px)}
+.project-narrative::before{
+  content:"";
+  position:absolute;
+  left:var(--pad);right:var(--pad);top:0;height:1px;
+  background:linear-gradient(90deg,var(--project-accent) 0 23%,var(--line) 23%);
+}
+.project-narrative h2 em{font-size:1.08em}
+.project-narrative article{padding-top:1rem}
+.project-narrative__origin{border-top:3px solid var(--project-accent)}
+.project-narrative__material,.project-narrative__process,.project-narrative__result{border-top:1px solid var(--line)}
+.project-next{color:var(--paper);border-top:0;background:linear-gradient(90deg,var(--black) 0 72%,rgba(225,39,41,.14) 72%)}
+.project-next span{position:relative}
+.project-next span::after{content:"";display:block;width:38%;height:3px;margin:.2em 0 0 auto;background:var(--project-accent)}
+
+/* Cada proyecto conserva su propia lógica fotográfica. */
+@media(min-width:901px){
+  .project-page[data-project="kero"] .project-gallery::before{content:"MEMORIA / SILUETA / TEXTURA"}
+  .project-page[data-project="lacrima"] .project-gallery::before{content:"LUZ / REPETICIÓN / TRANSPARENCIA";writing-mode:vertical-rl;top:8rem}
+  .project-page[data-project="lithos"] .project-gallery::before{content:"MÓDULO / BIOMATERIAL / CUERPO"}
+  .project-page[data-project="aeris"] .project-gallery::before{content:"AIRE / CAPAS / MOVIMIENTO";transform:rotate(-4deg)}
+  .project-page[data-project="lacrima"] .project-image--2{margin-top:4vw}
+  .project-page[data-project="lacrima"] .project-image--3{margin-top:11vw}
+  .project-page[data-project="lithos"] .project-image--2{margin-top:8vw}
+  .project-page[data-project="aeris"] .project-image--2{margin-top:6vw}
+}
+
+/* Las aperturas digitales mantienen título, descripción e interfaz en zonas separadas. */
+.project-hero--digital::before{display:none}
+.project-hero--digital h1{color:var(--paper);max-width:8.4ch}
+.project-hero--digital h1 .chaos-letter:nth-child(5n){color:var(--project-accent)}
+.project-hero--digital .project-hero-media{box-shadow:0 0 0 1px var(--line),0 30px 80px #0008}
+.project-page[data-project="escuchar-la-imagen"] .project-hero--digital h1{font-size:clamp(3.45rem,5.15vw,6rem);max-width:9.5ch}
+.project-page[data-project="dos-realidades"] .project-hero--digital .project-hero-media{grid-column:7/13}
+.project-page[data-project="tocar-la-imagen"] .project-hero--digital .project-hero-media{grid-column:6/12;margin-left:3vw}
+
+@media(max-width:900px){
+  .project-gallery::before{position:static;display:block;margin:0 0 42px;transform:none!important;writing-mode:initial!important}
+  .project-image,.project-video,.project-live{transform:translateY(26px)}
+  .project-hero::before{font-size:38vw;opacity:.65}
+  .project-hero__lead{padding-left:16px}
+  .project-narrative article{padding-top:18px}
+  .project-next{background:var(--black)}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .project-image,.project-video,.project-live{opacity:1;transform:none}
+  .project-image__visual img{transition:none}
+  .project-image__visual:hover img{transform:none}
+}

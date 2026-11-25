@@ -7,6 +7,7 @@ const nextRoutes={kero:['lacrima','LACRIMA'],lacrima:['lithos','LITHOS'],lithos:
 
 function renderHeroMedia(){
   const hero=q('.project-hero');
+  hero.dataset.project=project.title;
   const isDigital=['dos-realidades','escuchar-la-imagen','tocar-la-imagen'].includes(projectKey);
   hero.classList.toggle('project-hero--digital',isDigital);
   q('.project-hero-media',hero)?.remove();
@@ -55,8 +56,9 @@ function render(){
   q('#label-result').textContent=lang==='es'?'RESOLUCIÓN':'OUTCOME';
   q('#label-credits').textContent=lang==='es'?'AUTORÍA / PARTICIPACIÓN':'AUTHORSHIP / PARTICIPATION';
   const links=[];
-  if(project.repo)links.push(`<a href="${project.repo}" target="_blank" rel="noreferrer">${lang==='es'?'REPOSITORIO':'REPOSITORY'} ↗</a>`);
-  if(project.demo)links.push(`<a href="${project.demo}" target="_blank" rel="noreferrer">${lang==='es'?'EXPERIENCIA ONLINE':'LIVE EXPERIENCE'} ↗</a>`);
+  if(project.repo)links.push(`<a href="${project.repo}" target="_blank" rel="noreferrer">${lang==='es'?'REPOSITORIO':'REPOSITORY'}</a>`);
+  if(project.demo)links.push(`<a href="${project.demo}" target="_blank" rel="noreferrer">${lang==='es'?'EXPERIENCIA ONLINE':'LIVE EXPERIENCE'}</a>`);
+  if(project.video)links.push(`<a href="#gallery">VIDEO</a>`);
   q('#project-links').innerHTML=links.join('');
   renderGallery(content);
   renderHeroMedia();
@@ -65,6 +67,30 @@ function render(){
   q('.project-next').href=`../${nextSlug}/`;
   q('.project-next span').textContent=`${lang==='es'?'SIGUIENTE PROYECTO':'NEXT PROJECT'} / ${nextTitle}`;
   prepareTitleInteraction();
+  prepareMediaInteraction();
+}
+
+function prepareMediaInteraction(){
+  const media=[...document.querySelectorAll('.project-image,.project-video,.project-live')];
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches){media.forEach(item=>item.classList.add('is-in-view'));return}
+  const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{
+    if(entry.isIntersecting){entry.target.classList.add('is-in-view');observer.unobserve(entry.target)}
+  }),{threshold:.16});
+  media.forEach(item=>observer.observe(item));
+  if(!matchMedia('(pointer:fine)').matches)return;
+  document.querySelectorAll('.project-image__visual').forEach(frame=>{
+    frame.addEventListener('pointermove',event=>{
+      const rect=frame.getBoundingClientRect();
+      const x=(event.clientX-rect.left)/rect.width-.5;
+      const y=(event.clientY-rect.top)/rect.height-.5;
+      frame.style.setProperty('--focus-x',`${x*10}px`);
+      frame.style.setProperty('--focus-y',`${y*8}px`);
+    });
+    frame.addEventListener('pointerleave',()=>{
+      frame.style.setProperty('--focus-x','0px');
+      frame.style.setProperty('--focus-y','0px');
+    });
+  });
 }
 
 function prepareTitleInteraction(){

@@ -203,7 +203,3 @@ Las decisiones sobre el concepto, la estética, las imágenes y la forma de pres
 - Las tipografías Bodoni Moda, Inter y DM Mono se sirven mediante Google Fonts y utilizan SIL Open Font License 1.1.
 - El efecto de texto fue adaptado desde Text Scramble de Motion Primitives / Ibelick, publicado con licencia MIT.
 
-## Pendientes antes del examen
-
-- Revisar que los enlaces publicados y los videos abran correctamente antes de la presentación.
-- Confirmar que cada repositorio tenga su descripción, enlace de Pages y temas configurados en GitHub.

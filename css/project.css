@@ -198,7 +198,9 @@
   pointer-events:none;
 }
 .project-hero h1{letter-spacing:-.075em}
-.project-hero h1 .chaos-letter:nth-child(4n){color:var(--project-accent)}
+.project-hero h1 .chaos-letter{color:var(--paper)}
+.project-hero h1.is-chaotic .chaos-letter:nth-child(2n),
+.project-hero h1.is-chaotic .chaos-letter:nth-child(5n){color:var(--project-accent)}
 .project-hero__lead{position:relative;padding-left:clamp(18px,2vw,30px)}
 .project-hero__lead::before{content:"";position:absolute;left:0;top:.15em;bottom:.15em;width:3px;background:var(--project-accent)}
 .project-links a{font-weight:600}
@@ -256,11 +258,11 @@
 /* Las aperturas digitales mantienen título, descripción e interfaz en zonas separadas. */
 .project-hero--digital::before{display:none}
 .project-hero--digital h1{color:var(--paper);max-width:8.4ch}
-.project-hero--digital h1 .chaos-letter:nth-child(5n){color:var(--project-accent)}
 .project-hero--digital .project-hero-media{box-shadow:0 0 0 1px var(--line),0 30px 80px #0008}
 .project-page[data-project="escuchar-la-imagen"] .project-hero--digital h1{font-size:clamp(3.45rem,5.15vw,6rem);max-width:9.5ch}
+.project-hero--digital .project-hero-media,
 .project-page[data-project="dos-realidades"] .project-hero--digital .project-hero-media{grid-column:7/13}
-.project-page[data-project="tocar-la-imagen"] .project-hero--digital .project-hero-media{grid-column:6/12;margin-left:3vw}
+.project-page[data-project="tocar-la-imagen"] .project-hero--digital .project-hero-media{grid-column:7/13;margin-left:0}
 
 @media(max-width:900px){
   .project-gallery::before{position:static;display:block;margin:0 0 42px;transform:none!important;writing-mode:initial!important}

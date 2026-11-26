@@ -133,20 +133,34 @@ function prepareLightbox(){
   const caption=q('#project-lightbox-caption',lightbox);
   const initialZoom=.85;
   let zoom=initialZoom;
+  let baseWidth=0;
+  let baseHeight=0;
+  const measureImage=()=>{
+    const stageWidth=stage.clientWidth;
+    const stageHeight=stage.clientHeight;
+    const inset=Math.min(96,Math.max(36,stageWidth*.08));
+    const availableWidth=Math.max(1,stageWidth-inset);
+    const availableHeight=Math.max(1,stageHeight-inset);
+    const naturalWidth=image.naturalWidth||availableWidth;
+    const naturalHeight=image.naturalHeight||availableHeight;
+    const fit=Math.min(1,availableWidth/naturalWidth,availableHeight/naturalHeight);
+    baseWidth=Math.max(1,Math.round(naturalWidth*fit));
+    baseHeight=Math.max(1,Math.round(naturalHeight*fit));
+  };
   const setZoom=value=>{
     const previousWidth=Math.max(canvas.scrollWidth,stage.clientWidth);
     const previousHeight=Math.max(canvas.scrollHeight,stage.clientHeight);
     const focusX=(stage.scrollLeft+stage.clientWidth/2)/previousWidth;
     const focusY=(stage.scrollTop+stage.clientHeight/2)/previousHeight;
     zoom=Math.min(4,Math.max(.5,value));
-    const canvasScale=Math.max(1,zoom);
-    const stageWidth=stage.clientWidth;
-    const stageHeight=stage.clientHeight;
-    const frameGap=Math.min(64,Math.max(24,stageWidth*.045));
-    canvas.style.width=`${Math.round(stageWidth*canvasScale)}px`;
-    canvas.style.height=`${Math.round(stageHeight*canvasScale)}px`;
-    image.style.width=`${Math.max(1,Math.round(stageWidth*zoom-frameGap))}px`;
-    image.style.height=`${Math.max(1,Math.round(stageHeight*zoom-frameGap))}px`;
+    if(!baseWidth||!baseHeight)measureImage();
+    const renderedWidth=Math.max(1,Math.round(baseWidth*zoom/initialZoom));
+    const renderedHeight=Math.max(1,Math.round(baseHeight*zoom/initialZoom));
+    const canvasInset=Math.min(96,Math.max(36,stage.clientWidth*.08));
+    canvas.style.width=`${Math.max(stage.clientWidth,renderedWidth+canvasInset)}px`;
+    canvas.style.height=`${Math.max(stage.clientHeight,renderedHeight+canvasInset)}px`;
+    image.style.width=`${renderedWidth}px`;
+    image.style.height=`${renderedHeight}px`;
     stage.classList.toggle('is-zoomed',zoom>1);
     q('[data-lightbox-action="reset"]',lightbox).textContent=`${Math.round(zoom*100)}%`;
     requestAnimationFrame(()=>{
@@ -161,12 +175,16 @@ function prepareLightbox(){
     frame.setAttribute('role','button');
     frame.setAttribute('tabindex','0');
     frame.setAttribute('aria-label','Abrir imagen en pantalla completa');
-    const open=()=>{
+    const open=async()=>{
       const source=q('img',frame);
       image.src=source.currentSrc||source.src;
       image.alt=source.alt;
       caption.textContent=source.alt;
       lightbox.showModal();
+      try{await image.decode()}catch(error){}
+      baseWidth=0;
+      baseHeight=0;
+      measureImage();
       setZoom(initialZoom);
     };
     frame.addEventListener('click',open);
@@ -184,8 +202,10 @@ function prepareLightbox(){
   });
   stage.addEventListener('wheel',event=>{
     if(!lightbox.open)return;
-    event.preventDefault();
-    setZoom(zoom+(event.deltaY<0?.2:-.2));
+    if(event.ctrlKey||event.metaKey){
+      event.preventDefault();
+      setZoom(zoom+(event.deltaY<0?.2:-.2));
+    }
   },{passive:false});
   let drag=null;
   stage.addEventListener('pointerdown',event=>{

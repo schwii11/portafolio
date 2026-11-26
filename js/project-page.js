@@ -63,6 +63,7 @@ function render(){
   q('#project-links').innerHTML=links.join('');
   renderGallery(content);
   renderHeroMedia();
+  prepareScrollComposition();
   q('.project-lang').innerHTML=lang==='es'?'<b>ES</b> / EN':'ES / <b>EN</b>';
   const [nextSlug,nextTitle]=nextRoutes[projectKey];
   q('.project-next').href=`../${nextSlug}/index.html`;
@@ -93,6 +94,40 @@ function prepareMediaInteraction(){
       frame.style.setProperty('--focus-y','0px');
     });
   });
+}
+
+function prepareScrollComposition(){
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  if(document.body.dataset.scrollMotionReady)return;
+  document.body.dataset.scrollMotionReady='true';
+  const vectors={kero:[[-58,54],[46,-28],[-34,42],[26,34]],lacrima:[[0,96],[0,128],[0,74],[0,108]],lithos:[[-52,38],[54,34],[-38,62],[48,46]],aeris:[[-18,78],[24,104],[-14,66],[18,88]]}[projectKey]||[[0,52],[0,72],[0,48],[0,64]];
+  let frame=0;
+  const update=()=>{
+    const factor=innerWidth<=900?.42:1;
+    const hero=q('.project-hero');
+    if(hero){
+      const rect=hero.getBoundingClientRect();
+      const progress=Math.max(0,Math.min(1,-rect.top/Math.max(rect.height*.85,1)));
+      hero.style.setProperty('--hero-title-y',`${-22*progress*factor}px`);
+      hero.style.setProperty('--hero-media-y',`${18*progress*factor}px`);
+      hero.style.setProperty('--hero-media-scale',`${1-progress*.025}`);
+    }
+    document.querySelectorAll('.project-image').forEach((item,index)=>{
+      item.classList.add('motion-linked');
+      const rect=item.getBoundingClientRect();
+      const progress=Math.max(0,Math.min(1,(innerHeight-rect.top)/(innerHeight+rect.height*.28)));
+      const entering=1-progress;
+      const [x,y]=vectors[index%vectors.length];
+      item.style.setProperty('--gallery-x',`${x*entering*factor}px`);
+      item.style.setProperty('--gallery-y',`${y*entering*factor}px`);
+      item.style.setProperty('--gallery-mask',`${18*entering*factor}%`);
+      item.style.setProperty('--gallery-scale',`${1-entering*.035*factor}`);
+    });
+  };
+  const request=()=>{if(frame)return;frame=requestAnimationFrame(()=>{frame=0;update()})};
+  addEventListener('scroll',request,{passive:true});
+  addEventListener('resize',request);
+  update();
 }
 
 function prepareLightbox(){

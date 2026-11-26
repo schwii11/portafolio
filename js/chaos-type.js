@@ -17,12 +17,34 @@
     element.addEventListener('pointerenter',()=>element.classList.add('is-chaotic'));
     element.addEventListener('pointerleave',()=>element.classList.remove('is-chaotic'));
   }
-  addEventListener('DOMContentLoaded',()=>document.querySelectorAll('#focus-title,#method-title').forEach(wrap));
+  addEventListener('DOMContentLoaded',()=>document.querySelectorAll('#focus-title,#method-title,#closing-title').forEach(wrap));
   addEventListener('DOMContentLoaded',()=>{
     const elements=[...document.querySelectorAll('.about-opening>*,.about-focus>*,.about-method>*,.about-closing>*')];
     elements.forEach((element,index)=>{element.classList.add('scroll-enter');element.style.setProperty('--enter-delay',`${index%3*80}ms`)});
     if(matchMedia('(prefers-reduced-motion: reduce)').matches){elements.forEach(element=>element.classList.add('is-visible'));return}
     const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-visible');observer.unobserve(entry.target)}}),{threshold:.12,rootMargin:'0px 0px -8% 0px'});
     elements.forEach(element=>observer.observe(element));
+  });
+  addEventListener('DOMContentLoaded',()=>{
+    const sections=[...document.querySelectorAll('.about-focus,.about-method,.about-closing')];
+    let frame=0;
+    const update=()=>sections.forEach(section=>{
+      const rect=section.getBoundingClientRect();
+      const progress=Math.max(0,Math.min(1,(innerHeight-rect.top)/(innerHeight+rect.height*.35)));
+      const tension=Math.sin(progress*Math.PI);
+      const factor=innerWidth<=800?.42:1;
+      section.style.setProperty('--about-letter-shift',`${18*tension*factor}px`);
+      section.style.setProperty('--about-copy-y',`${(1-progress)*44*factor}px`);
+      section.style.setProperty('--about-group-gap',`${(1-progress)*28*factor}px`);
+      section.style.setProperty('--about-group-gap-neg',`${(1-progress)*-28*factor}px`);
+      section.querySelectorAll('h2 .chaos-letter').forEach((letter,index)=>{
+        const flow=index%3===0?-1:index%3===1?.45:1;
+        letter.style.setProperty('--about-letter-y',`${18*tension*factor*flow}px`);
+      });
+    });
+    const request=()=>{if(frame)return;frame=requestAnimationFrame(()=>{frame=0;update()})};
+    addEventListener('scroll',request,{passive:true});
+    addEventListener('resize',request);
+    update();
   });
 })();

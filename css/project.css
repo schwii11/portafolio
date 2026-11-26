@@ -203,6 +203,7 @@
   transition:opacity .75s ease,transform .9s cubic-bezier(.16,1,.3,1);
 }
 .project-image.is-in-view,.project-video.is-in-view,.project-live.is-in-view{opacity:1;transform:none}
+.project-image.motion-linked{opacity:1;transform:translate3d(var(--gallery-x,0px),var(--gallery-y,0px),0) scale(var(--gallery-scale,1));clip-path:inset(var(--gallery-mask,0%) 0 0);transition:none;will-change:transform,clip-path}
 .project-image__visual{--focus-x:0px;--focus-y:0px;position:relative}
 .project-image__visual img{transition:transform .75s cubic-bezier(.16,1,.3,1),filter .45s ease}
 .project-image__visual:hover img{transform:translate3d(var(--focus-x),var(--focus-y),0) scale(1.018);filter:saturate(1.06) contrast(1.025)}
@@ -219,6 +220,8 @@
 .project-next{color:var(--paper);border-top:1px solid var(--line);background:var(--black)}
 .project-next span{position:relative}
 .project-next span::after{display:none}
+.project-hero h1{transform:translateY(var(--hero-title-y,0px));will-change:transform}
+.project-hero-media{transform:translateY(var(--hero-media-y,0px)) scale(var(--hero-media-scale,1));transform-origin:center;will-change:transform}
 
 /* Cada proyecto conserva su propia lógica fotográfica. */
 @media(min-width:901px){
@@ -254,6 +257,7 @@
   .project-image,.project-video,.project-live{opacity:1;transform:none}
   .project-image__visual img{transition:none}
   .project-image__visual:hover img{transform:none}
+  .project-hero h1,.project-hero-media,.project-image.motion-linked{transform:none!important;clip-path:none!important}
 }
 
 /* Intervención final de fichas: portada legible, fotografía protagonista y sin adornos. */

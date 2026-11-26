@@ -96,7 +96,8 @@ function wrapChaosLetters(element) {
     const y = Math.round((Math.random() - .5) * 24);
     const rotate = Math.round((Math.random() - .5) * 34);
     const scale = (0.86 + Math.random() * .34).toFixed(2);
-    return `<span class="chaos-letter" style="--chaos-x:${x}px;--chaos-y:${y}px;--chaos-r:${rotate}deg;--chaos-s:${scale};--chaos-delay:${letterIndex++ * 7}ms">${character}</span>`;
+    const flow = letterIndex % 3 === 0 ? -1 : letterIndex % 3 === 1 ? .45 : 1;
+    return `<span class="chaos-letter" style="--chaos-x:${x}px;--chaos-y:${y}px;--chaos-r:${rotate}deg;--chaos-s:${scale};--chaos-delay:${letterIndex * 7}ms;--letter-flow:${flow};--letter-i:${letterIndex++}">${character}</span>`;
   }).join('')}</span>`).join('<span class="chaos-space" aria-hidden="true"> </span>');
 }
 
@@ -185,6 +186,20 @@ renderProjects();
 });
 observeReveals();
 
+function prepareLandingLetters(){
+  $$('.manifesto__name>span').forEach((line,lineIndex)=>{
+    if(line.dataset.introReady)return;
+    const label=line.textContent;
+    line.dataset.introReady='true';
+    line.setAttribute('aria-label',label);
+    line.innerHTML=[...label].map((character,index)=>character===' '
+      ? '<span class="intro-space" aria-hidden="true"> </span>'
+      : `<span class="intro-letter" aria-hidden="true" style="--intro-delay:${lineIndex*130+index*52}ms;--intro-y:${index%3===0?42:index%3===1?-28:24}px">${character}</span>`).join('');
+  });
+  requestAnimationFrame(()=>document.querySelector('.manifesto--cover')?.classList.add('intro-ready'));
+}
+prepareLandingLetters();
+
 // El scroll construye las composiciones sin esconder contenido ni perseguir el cursor.
 if (!reducedMotion) {
   let archiveFrame = 0;
@@ -192,7 +207,29 @@ if (!reducedMotion) {
     $$('.project-story').forEach(story => {
       const rect = story.getBoundingClientRect();
       const progress = Math.max(0, Math.min(1, (innerHeight - rect.top) / (innerHeight + rect.height * .45)));
+      const entering=1-progress;
+      const tension=Math.sin(progress*Math.PI);
+      const motionFactor=innerWidth<=800?.42:1;
+      const id=story.dataset.project;
+      const movement={
+        kero:{px:-54,py:48,sx:58,sy:-34,rotate:-2.4},
+        lacrima:{px:0,py:92,sx:0,sy:126,rotate:0},
+        lithos:{px:-46,py:34,sx:52,sy:54,rotate:1.2},
+        aeris:{px:-18,py:72,sx:24,sy:96,rotate:-.7}
+      }[id]||{px:0,py:54,sx:0,sy:46,rotate:0};
       story.style.setProperty('--story-progress', progress.toFixed(3));
+      story.style.setProperty('--story-primary-x',`${movement.px*entering*motionFactor}px`);
+      story.style.setProperty('--story-primary-y',`${movement.py*entering*motionFactor}px`);
+      story.style.setProperty('--story-secondary-x',`${movement.sx*entering*motionFactor}px`);
+      story.style.setProperty('--story-secondary-y',`${movement.sy*entering*motionFactor}px`);
+      story.style.setProperty('--story-rotate',`${movement.rotate*entering*motionFactor}deg`);
+      story.style.setProperty('--story-secondary-rotate',`${movement.rotate*entering*motionFactor*-1}deg`);
+      story.style.setProperty('--story-title-shift',`${32*tension*motionFactor}px`);
+      story.style.setProperty('--story-mask',`${Math.max(0,22*entering*motionFactor)}%`);
+      story.querySelectorAll('.project-row__title .chaos-letter').forEach((letter,index)=>{
+        const flow=index%3===0?-1:index%3===1?.45:1;
+        letter.style.setProperty('--story-letter-y',`${32*tension*motionFactor*flow}px`);
+      });
     });
   };
   const requestArchive = () => {
@@ -202,6 +239,46 @@ if (!reducedMotion) {
   addEventListener('scroll', requestArchive, { passive: true });
   addEventListener('resize', requestArchive);
   updateArchive();
+}
+
+// La frase central atraviesa orden, tensión y recomposición sin alterar su retícula final.
+if(!reducedMotion){
+  const statement=$('#manifesto-title');
+  const workHeading=$('.section-heading');
+  const workLetters=$$('#work-title .chaos-letter');
+  let editorialFrame=0;
+  const updateEditorialSequence=()=>{
+    if(statement){
+      const cover=statement.closest('.manifesto--cover');
+      const rect=cover.getBoundingClientRect();
+      const progress=Math.max(0,Math.min(1,-rect.top/Math.max(rect.height-innerHeight*.2,1)));
+      const tension=Math.sin(progress*Math.PI);
+      statement.style.setProperty('--vestir-x',`${-22*tension}px`);
+      statement.style.setProperty('--tambien-y',`${18*tension}px`);
+      statement.style.setProperty('--es-x',`${-10*tension}px`);
+      statement.style.setProperty('--contar-x',`${28*tension}px`);
+      statement.style.setProperty('--contar-scale',`${1+.16*tension}`);
+      statement.classList.toggle('is-statement-tension',progress>.38&&progress<.78);
+    }
+    if(workHeading){
+      const rect=workHeading.getBoundingClientRect();
+      const progress=Math.max(0,Math.min(1,(innerHeight-rect.top)/(innerHeight*.72)));
+      workHeading.style.setProperty('--work-shift',`${(1-progress)*46}px`);
+      workHeading.style.setProperty('--work-progress',progress.toFixed(3));
+      workHeading.style.setProperty('--work-opacity',`${.38+progress*.62}`);
+      workLetters.forEach((letter,index)=>{
+        const flow=index%3===0?-1:index%3===1?.45:1;
+        letter.style.setProperty('--work-letter-y',`${(1-progress)*46*flow}px`);
+      });
+    }
+  };
+  const requestEditorialSequence=()=>{
+    if(editorialFrame)return;
+    editorialFrame=requestAnimationFrame(()=>{editorialFrame=0;updateEditorialSequence()});
+  };
+  addEventListener('scroll',requestEditorialSequence,{passive:true});
+  addEventListener('resize',requestEditorialSequence);
+  updateEditorialSequence();
 }
 
 // La portada comparte el ritmo revelar → fragmentar → recomponer del archivo.

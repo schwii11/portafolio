@@ -64,7 +64,7 @@ function render(){
   renderHeroMedia();
   q('.project-lang').innerHTML=lang==='es'?'<b>ES</b> / EN':'ES / <b>EN</b>';
   const [nextSlug,nextTitle]=nextRoutes[projectKey];
-  q('.project-next').href=`../${nextSlug}/`;
+  q('.project-next').href=`../${nextSlug}/index.html`;
   q('.project-next span').textContent=`${lang==='es'?'SIGUIENTE PROYECTO':'NEXT PROJECT'} / ${nextTitle}`;
   prepareTitleInteraction();
   prepareMediaInteraction();

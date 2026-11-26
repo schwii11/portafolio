@@ -53,7 +53,7 @@ function renderProjects() {
         </header>
         <div class="project-story__visual">${visual}</div>
         <div class="project-story__narrative"><p>${project.concept}</p><p>${project.process}</p><p class="project-story__outcome">${project.result}</p></div>
-        <a class="project-story__deep-link" href="projects/${project.slug}/" data-cursor="ABRIR">VER PROYECTO COMPLETO</a>
+        <a class="project-story__deep-link" href="projects/${project.slug}/index.html" data-cursor="ABRIR">VER PROYECTO COMPLETO</a>
       </article>`;
   };
   list.innerHTML = projects.map(card).join('');

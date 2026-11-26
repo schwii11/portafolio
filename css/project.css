@@ -186,17 +186,7 @@
 .project-kicker,.project-credits{font-family:var(--body)}
 .project-nav,.project-links,.project-kicker{font-weight:600;letter-spacing:.095em}
 .project-hero{isolation:isolate}
-.project-hero::before{
-  content:attr(data-project);
-  position:absolute;
-  z-index:-1;
-  right:-.08em;
-  bottom:-.1em;
-  color:rgba(225,39,41,.08);
-  font:italic 400 clamp(8rem,22vw,24rem)/.7 var(--display);
-  text-transform:uppercase;
-  pointer-events:none;
-}
+.project-hero::before{display:none}
 .project-hero h1{letter-spacing:-.075em}
 .project-hero h1 .chaos-letter{color:var(--paper)}
 .project-hero h1.is-chaotic .chaos-letter:nth-child(2n),
@@ -206,15 +196,7 @@
 .project-links a{font-weight:600}
 
 .project-gallery{position:relative}
-.project-gallery::before{
-  content:"MATERIA / PROCESO / CUERPO";
-  position:absolute;
-  right:var(--pad);
-  top:2rem;
-  color:var(--project-accent);
-  font:italic 400 clamp(1.15rem,2vw,1.9rem)/1 var(--display);
-  transform:rotate(3deg);
-}
+.project-gallery::before{display:none}
 .project-image,.project-video,.project-live{
   opacity:0;
   transform:translateY(42px);
@@ -229,19 +211,14 @@
 .project-image figcaption p{font-size:1rem}
 
 .project-narrative{position:relative;padding-top:clamp(62px,7vw,98px);padding-bottom:clamp(62px,7vw,100px)}
-.project-narrative::before{
-  content:"";
-  position:absolute;
-  left:var(--pad);right:var(--pad);top:0;height:1px;
-  background:linear-gradient(90deg,var(--project-accent) 0 23%,var(--line) 23%);
-}
+.project-narrative::before{display:none}
 .project-narrative h2 em{font-size:1.08em}
 .project-narrative article{padding-top:1rem}
 .project-narrative__origin{border-top:3px solid var(--project-accent)}
 .project-narrative__material,.project-narrative__process,.project-narrative__result{border-top:1px solid var(--line)}
-.project-next{color:var(--paper);border-top:0;background:linear-gradient(90deg,var(--black) 0 72%,rgba(225,39,41,.14) 72%)}
+.project-next{color:var(--paper);border-top:1px solid var(--line);background:var(--black)}
 .project-next span{position:relative}
-.project-next span::after{content:"";display:block;width:38%;height:3px;margin:.2em 0 0 auto;background:var(--project-accent)}
+.project-next span::after{display:none}
 
 /* Cada proyecto conserva su propia lógica fotográfica. */
 @media(min-width:901px){
@@ -277,4 +254,37 @@
   .project-image,.project-video,.project-live{opacity:1;transform:none}
   .project-image__visual img{transition:none}
   .project-image__visual:hover img{transform:none}
+}
+
+/* Intervención final de fichas: portada legible, fotografía protagonista y sin adornos. */
+.project-hero::before,.project-gallery::before,.project-narrative::before,.project-next span::after{content:none!important;display:none!important}
+.project-hero-media::after{background:linear-gradient(90deg,#101010 0 18%,transparent 54%),linear-gradient(0deg,#101010d9 0,transparent 42%)}
+.project-image__visual{background:transparent}
+.project-image img{background:transparent;filter:none!important}
+.project-image figcaption{padding-left:0;border-left:0}
+.project-image figcaption span{color:var(--project-accent)}
+.project-narrative__origin,.project-narrative__material,.project-narrative__process,.project-narrative__result{border-top:1px solid var(--line)}
+.project-narrative__origin{border-top-color:var(--project-accent)}
+.project-next{background:var(--black);border-top:1px solid var(--line)}
+
+/* Las interfaces digitales nunca compiten con el titular. */
+.project-hero--digital{grid-template-rows:auto auto auto auto;overflow:visible}
+.project-hero--digital h1{grid-column:1/13;grid-row:2;max-width:12ch;margin:clamp(24px,4vw,56px) 0 0;font-size:clamp(4.2rem,7.2vw,8rem);line-height:.8}
+.project-page[data-project="escuchar-la-imagen"] .project-hero--digital h1{max-width:12ch;font-size:clamp(3.7rem,6.4vw,7rem)}
+.project-hero--digital .project-hero-media{grid-column:5/13;grid-row:3/5;aspect-ratio:16/10;margin-top:clamp(34px,5vw,74px);box-shadow:none;border:0;background:transparent}
+.project-hero--digital .project-hero__lead{grid-column:1/5;grid-row:3;margin-top:clamp(34px,5vw,74px)}
+.project-hero--digital .project-hero__meta{grid-column:1/5;grid-row:4;margin-top:22px}
+.project-hero--digital .project-links{grid-column:9/13;grid-row:1}
+.project-hero--digital .project-hero-media__main img{background:transparent;object-fit:contain}
+
+@media(max-width:900px){
+  .project-hero--digital{grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:auto auto auto auto auto auto}
+  .project-hero--digital .project-hero__number{grid-column:1/2;grid-row:1}
+  .project-hero--digital .project-links{grid-column:2/5;grid-row:1;justify-self:end;align-items:flex-end;margin:0}
+  .project-hero--digital h1,.project-page[data-project="escuchar-la-imagen"] .project-hero--digital h1{grid-column:1/5;grid-row:2;max-width:100%;margin:32px 0 0;font-size:clamp(2.7rem,11.5vw,5.2rem);line-height:.84}
+  .project-hero--digital .project-hero-media{grid-column:1/5;grid-row:3;aspect-ratio:16/10;margin-top:28px}
+  .project-hero--digital .project-hero__lead{grid-column:1/5;grid-row:4;margin-top:22px}
+  .project-hero--digital .project-hero__meta{grid-column:1/5;grid-row:5;margin-top:4px}
+  .project-image__visual{aspect-ratio:auto!important}
+  .project-image img{height:auto;object-fit:contain!important;object-position:center!important}
 }

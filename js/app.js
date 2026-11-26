@@ -172,20 +172,11 @@ $$('.site-menu a').forEach(link => link.addEventListener('click', () => {
 
 if (matchMedia('(pointer:fine)').matches) {
   const cursor = $('.cursor');
-  addEventListener('pointermove', event => {
-    cursor.style.translate = `${event.clientX}px ${event.clientY}px`;
-  });
-  $$('a, button, [data-cursor]').forEach(item => {
-    item.addEventListener('pointerenter', () => {
-      cursor.classList.add('is-active');
-      cursor.firstElementChild.textContent = item.dataset.cursor || 'OPEN';
-    });
-    item.addEventListener('pointerleave', () => cursor.classList.remove('is-active'));
-  });
+  if (cursor) cursor.remove();
 }
 
 renderProjects();
-['.hero__practice span', '.hero__practice em', '.manifesto h1', '#work-title', '.about-preview h2', '.contact h2'].forEach(selector => {
+['.hero__practice span', '.hero__practice em', '#work-title', '.about-preview h2', '.contact h2'].forEach(selector => {
   const element = $(selector);
   if (!element) return;
   wrapChaosLetters(element);
@@ -193,6 +184,25 @@ renderProjects();
   element.addEventListener('pointerleave', () => element.classList.remove('is-chaotic'));
 });
 observeReveals();
+
+// El scroll construye las composiciones sin esconder contenido ni perseguir el cursor.
+if (!reducedMotion) {
+  let archiveFrame = 0;
+  const updateArchive = () => {
+    $$('.project-story').forEach(story => {
+      const rect = story.getBoundingClientRect();
+      const progress = Math.max(0, Math.min(1, (innerHeight - rect.top) / (innerHeight + rect.height * .45)));
+      story.style.setProperty('--story-progress', progress.toFixed(3));
+    });
+  };
+  const requestArchive = () => {
+    if (archiveFrame) return;
+    archiveFrame = requestAnimationFrame(() => { archiveFrame = 0; updateArchive(); });
+  };
+  addEventListener('scroll', requestArchive, { passive: true });
+  addEventListener('resize', requestArchive);
+  updateArchive();
+}
 
 // La portada comparte el ritmo revelar → fragmentar → recomponer del archivo.
 if (!reducedMotion) {

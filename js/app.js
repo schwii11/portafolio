@@ -200,19 +200,19 @@ function prepareLandingLetters(){
 prepareLandingLetters();
 
 const assemblyEase='cubic-bezier(0.16,1,0.3,1)';
-const playAssembly=(element,keyframes,options={})=>element?.animate(keyframes,{duration:680,easing:assemblyEase,fill:'none',...options});
+const playAssembly=(element,keyframes,options={})=>element?.animate(keyframes,{duration:760,easing:assemblyEase,fill:'none',...options});
 
 function prepareLandingAssembly(){
   if(reducedMotion)return document.querySelector('.manifesto--cover')?.classList.add('intro-ready');
   const run=()=>{
     $$('.manifesto__name .intro-letter').forEach((letter,index)=>{
-      const directions=[[-30,-58],[22,52],[-42,18],[34,-36]];
+      const directions=[[-38,-70],[30,64],[-52,24],[42,-46]];
       const [x,y]=directions[index%directions.length];
-      playAssembly(letter,[{opacity:0,transform:`translate3d(${x}px,${y}px,0)`},{opacity:1,transform:'translate3d(0,0,0)'}],{delay:index*24,duration:660});
+      playAssembly(letter,[{opacity:0,transform:`translate3d(${x}px,${y}px,0)`},{opacity:1,transform:'translate3d(0,0,0)'}],{delay:index*26,duration:740});
     });
     $$('.statement-word').forEach((word,index)=>{
-      const starts=[['0','-62px','0deg','1'],['58px','0','0deg','1'],['-34px','18px','0deg','1'],['0','68px','-3deg','1.08']][index]||['0','34px','0deg','1'];
-      playAssembly(word,[{opacity:0,transform:`translate3d(${starts[0]},${starts[1]},0) rotate(${starts[2]}) scale(${starts[3]})`},{opacity:1,transform:'translate3d(0,0,0) rotate(0) scale(1)'}],{delay:190+index*50,duration:760});
+      const starts=[['0','-76px','0deg','1'],['72px','0','0deg','1'],['-42px','24px','0deg','1'],['0','82px','-4deg','1.1']][index]||['0','40px','0deg','1'];
+      playAssembly(word,[{opacity:0,transform:`translate3d(${starts[0]},${starts[1]},0) rotate(${starts[2]}) scale(${starts[3]})`},{opacity:1,transform:'translate3d(0,0,0) rotate(0) scale(1)'}],{delay:200+index*54,duration:850});
     });
     $$('.manifesto__folio,.manifesto__disciplines,.manifesto__copy').forEach((item,index)=>playAssembly(item,[{opacity:0,transform:'translate3d(0,22px,0)'},{opacity:1,transform:'translate3d(0,0,0)'}],{delay:310+index*82,duration:560}));
     document.querySelector('.manifesto--cover')?.classList.add('intro-ready');
@@ -225,10 +225,10 @@ function assembleStory(story){
   story.dataset.assembled='true';
   story.classList.add('is-visible');
   const id=story.dataset.project;
-  const vectors={kero:[-72,54,62,-42,-2],lacrima:[0,86,0,112,0],lithos:[-58,36,62,48,1],aeris:[-26,58,30,72,-.5]}[id]||[0,58,0,46,0];
+  const vectors={kero:[-86,66,74,-52,-2.4],lacrima:[0,102,0,132,0],lithos:[-70,44,74,58,1.2],aeris:[-32,68,38,86,-.7]}[id]||[0,68,0,56,0];
   $$('.project-row__title .chaos-letter',story).forEach((letter,index)=>playAssembly(letter,[{opacity:0,transform:`translate3d(${(index%3-1)*15}px,${index%2?42:-36}px,0)`},{opacity:1,transform:'translate3d(0,0,0)'}],{delay:index*22,duration:620}));
-  playAssembly($('.project-story__primary',story),[{opacity:.15,clipPath:'inset(14% 0 10% 0)',transform:`translate3d(${vectors[0]}px,${vectors[1]}px,0) rotate(${vectors[4]}deg) scale(1.045)`},{opacity:1,clipPath:'inset(0)',transform:'translate3d(0,0,0) rotate(0) scale(1)'}],{delay:55,duration:790});
-  playAssembly($('.project-story__secondary',story),[{opacity:0,transform:`translate3d(${vectors[2]}px,${vectors[3]}px,0) scale(1.035)`},{opacity:1,transform:'translate3d(0,0,0) scale(1)'}],{delay:125,duration:730});
+  playAssembly($('.project-story__primary',story),[{opacity:.08,clipPath:'inset(18% 0 12% 0)',transform:`translate3d(${vectors[0]}px,${vectors[1]}px,0) rotate(${vectors[4]}deg) scale(1.055)`},{opacity:1,clipPath:'inset(0)',transform:'translate3d(0,0,0) rotate(0) scale(1)'}],{delay:55,duration:880});
+  playAssembly($('.project-story__secondary',story),[{opacity:0,transform:`translate3d(${vectors[2]}px,${vectors[3]}px,0) scale(1.045)`},{opacity:1,transform:'translate3d(0,0,0) scale(1)'}],{delay:130,duration:820});
   $$('.project-story__index,.project-row__title>p,.project-story__summary,.project-story__narrative,.project-story__deep-link',story).forEach((item,index)=>playAssembly(item,[{opacity:0,transform:'translate3d(0,20px,0)'},{opacity:1,transform:'translate3d(0,0,0)'}],{delay:180+index*54,duration:540}));
 }
 

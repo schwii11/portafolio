@@ -1,7 +1,7 @@
 (function(){
   const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
   const ease='cubic-bezier(0.16,1,0.3,1)';
-  const play=(element,keyframes,options={})=>element?.animate(keyframes,{duration:660,easing:ease,fill:'none',...options});
+  const play=(element,keyframes,options={})=>element?.animate(keyframes,{duration:740,easing:ease,fill:'none',...options});
 
   function wrap(element){
     if(!element||element.dataset.chaosReady)return;
@@ -25,7 +25,7 @@
     if(section.dataset.assembled)return;
     section.dataset.assembled='true';
     const title=section.querySelector('h1,h2');
-    [...(title?.querySelectorAll('.chaos-letter')||[])].forEach((letter,index)=>play(letter,[{opacity:0,transform:`translate3d(${index%2?22:-18}px,${index%3?42:-34}px,0)`},{opacity:1,transform:'translate3d(0,0,0)'}],{delay:index*24,duration:640}));
+    [...(title?.querySelectorAll('.chaos-letter')||[])].forEach((letter,index)=>play(letter,[{opacity:0,transform:`translate3d(${index%2?30:-26}px,${index%3?54:-46}px,0)`},{opacity:1,transform:'translate3d(0,0,0)'}],{delay:index*26,duration:720}));
     [...section.children].filter(item=>item!==title).forEach((item,index)=>play(item,[{opacity:0,transform:`translate3d(${index%2?24:-20}px,24px,0)`},{opacity:1,transform:'translate3d(0,0,0)'}],{delay:110+index*78,duration:570}));
   }
 

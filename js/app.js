@@ -58,8 +58,8 @@ function renderProjects() {
   };
   list.innerHTML = projects.map(card).join('');
   prepareChaosType(list);
-  prepareImageMotion(list);
   observeReveals();
+  prepareEditorialAssemblies(list);
 }
 
 function prepareImageMotion(root = document) {
@@ -132,7 +132,7 @@ function observeReveals() {
       }
     });
   }, { threshold: 0.12 });
-  $$('.reveal:not(.is-visible)').forEach(item => observer.observe(item));
+  $$('.reveal:not(.is-visible):not(.project-story)').forEach(item => observer.observe(item));
 }
 
 // Adaptación en JavaScript del patrón Text Scramble de Motion Primitives (MIT).
@@ -194,149 +194,55 @@ function prepareLandingLetters(){
     line.setAttribute('aria-label',label);
     line.innerHTML=[...label].map((character,index)=>character===' '
       ? '<span class="intro-space" aria-hidden="true"> </span>'
-      : `<span class="intro-letter" aria-hidden="true" style="--intro-delay:${lineIndex*130+index*52}ms;--intro-y:${index%3===0?42:index%3===1?-28:24}px">${character}</span>`).join('');
+      : `<span class="intro-letter" aria-hidden="true">${character}</span>`).join('');
   });
-  requestAnimationFrame(()=>document.querySelector('.manifesto--cover')?.classList.add('intro-ready'));
 }
 prepareLandingLetters();
 
-// El scroll construye las composiciones sin esconder contenido ni perseguir el cursor.
-if (!reducedMotion) {
-  let archiveFrame = 0;
-  const updateArchive = () => {
-    $$('.project-story').forEach(story => {
-      const rect = story.getBoundingClientRect();
-      const progress = Math.max(0, Math.min(1, (innerHeight - rect.top) / (innerHeight + rect.height * .45)));
-      const entering=1-progress;
-      const tension=Math.sin(progress*Math.PI);
-      const motionFactor=innerWidth<=800?.42:1;
-      const id=story.dataset.project;
-      const movement={
-        kero:{px:-54,py:48,sx:58,sy:-34,rotate:-2.4},
-        lacrima:{px:0,py:92,sx:0,sy:126,rotate:0},
-        lithos:{px:-46,py:34,sx:52,sy:54,rotate:1.2},
-        aeris:{px:-18,py:72,sx:24,sy:96,rotate:-.7}
-      }[id]||{px:0,py:54,sx:0,sy:46,rotate:0};
-      story.style.setProperty('--story-progress', progress.toFixed(3));
-      story.style.setProperty('--story-primary-x',`${movement.px*entering*motionFactor}px`);
-      story.style.setProperty('--story-primary-y',`${movement.py*entering*motionFactor}px`);
-      story.style.setProperty('--story-secondary-x',`${movement.sx*entering*motionFactor}px`);
-      story.style.setProperty('--story-secondary-y',`${movement.sy*entering*motionFactor}px`);
-      story.style.setProperty('--story-rotate',`${movement.rotate*entering*motionFactor}deg`);
-      story.style.setProperty('--story-secondary-rotate',`${movement.rotate*entering*motionFactor*-1}deg`);
-      story.style.setProperty('--story-title-shift',`${32*tension*motionFactor}px`);
-      story.style.setProperty('--story-mask',`${Math.max(0,22*entering*motionFactor)}%`);
-      story.querySelectorAll('.project-row__title .chaos-letter').forEach((letter,index)=>{
-        const flow=index%3===0?-1:index%3===1?.45:1;
-        letter.style.setProperty('--story-letter-y',`${32*tension*motionFactor*flow}px`);
-      });
+const assemblyEase='cubic-bezier(0.16,1,0.3,1)';
+const playAssembly=(element,keyframes,options={})=>element?.animate(keyframes,{duration:560,easing:assemblyEase,fill:'none',...options});
+
+function prepareLandingAssembly(){
+  if(reducedMotion)return document.querySelector('.manifesto--cover')?.classList.add('intro-ready');
+  const run=()=>{
+    $$('.manifesto__name .intro-letter').forEach((letter,index)=>{
+      const directions=[[-30,-58],[22,52],[-42,18],[34,-36]];
+      const [x,y]=directions[index%directions.length];
+      playAssembly(letter,[{opacity:0,transform:`translate3d(${x}px,${y}px,0)`},{opacity:1,transform:'translate3d(0,0,0)'}],{delay:index*20,duration:540});
     });
+    $$('.statement-word').forEach((word,index)=>{
+      const starts=[['0','-62px','0deg','1'],['58px','0','0deg','1'],['-34px','18px','0deg','1'],['0','68px','-3deg','1.08']][index]||['0','34px','0deg','1'];
+      playAssembly(word,[{opacity:0,transform:`translate3d(${starts[0]},${starts[1]},0) rotate(${starts[2]}) scale(${starts[3]})`},{opacity:1,transform:'translate3d(0,0,0) rotate(0) scale(1)'}],{delay:160+index*42,duration:620});
+    });
+    $$('.manifesto__folio,.manifesto__disciplines,.manifesto__copy').forEach((item,index)=>playAssembly(item,[{opacity:0,transform:'translate3d(0,22px,0)'},{opacity:1,transform:'translate3d(0,0,0)'}],{delay:260+index*70,duration:440}));
+    document.querySelector('.manifesto--cover')?.classList.add('intro-ready');
   };
-  const requestArchive = () => {
-    if (archiveFrame) return;
-    archiveFrame = requestAnimationFrame(() => { archiveFrame = 0; updateArchive(); });
-  };
-  addEventListener('scroll', requestArchive, { passive: true });
-  addEventListener('resize', requestArchive);
-  updateArchive();
+  (document.fonts?.ready||Promise.resolve()).then(()=>requestAnimationFrame(run));
 }
 
-// La frase central atraviesa orden, tensión y recomposición sin alterar su retícula final.
+function assembleStory(story){
+  if(story.dataset.assembled)return;
+  story.dataset.assembled='true';
+  story.classList.add('is-visible');
+  const id=story.dataset.project;
+  const vectors={kero:[-72,54,62,-42,-2],lacrima:[0,86,0,112,0],lithos:[-58,36,62,48,1],aeris:[-26,58,30,72,-.5]}[id]||[0,58,0,46,0];
+  $$('.project-row__title .chaos-letter',story).forEach((letter,index)=>playAssembly(letter,[{opacity:0,transform:`translate3d(${(index%3-1)*15}px,${index%2?42:-36}px,0)`},{opacity:1,transform:'translate3d(0,0,0)'}],{delay:index*18,duration:500}));
+  playAssembly($('.project-story__primary',story),[{opacity:.15,clipPath:'inset(14% 0 10% 0)',transform:`translate3d(${vectors[0]}px,${vectors[1]}px,0) rotate(${vectors[4]}deg) scale(1.045)`},{opacity:1,clipPath:'inset(0)',transform:'translate3d(0,0,0) rotate(0) scale(1)'}],{delay:40,duration:650});
+  playAssembly($('.project-story__secondary',story),[{opacity:0,transform:`translate3d(${vectors[2]}px,${vectors[3]}px,0) scale(1.035)`},{opacity:1,transform:'translate3d(0,0,0) scale(1)'}],{delay:105,duration:600});
+  $$('.project-story__index,.project-row__title>p,.project-story__summary,.project-story__narrative,.project-story__deep-link',story).forEach((item,index)=>playAssembly(item,[{opacity:0,transform:'translate3d(0,20px,0)'},{opacity:1,transform:'translate3d(0,0,0)'}],{delay:150+index*45,duration:430}));
+}
+
+function prepareEditorialAssemblies(root=document){
+  const stories=$$('.project-story:not([data-assembly-ready])',root);
+  if(reducedMotion){stories.forEach(story=>{story.dataset.assemblyReady='true';story.classList.add('is-visible')});return}
+  const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){assembleStory(entry.target);observer.unobserve(entry.target)}}),{threshold:.08,rootMargin:'0px 0px -15% 0px'});
+  stories.forEach(story=>{story.dataset.assemblyReady='true';observer.observe(story)});
+}
+
+prepareLandingAssembly();
+
 if(!reducedMotion){
-  const statement=$('#manifesto-title');
-  const workHeading=$('.section-heading');
-  const workLetters=$$('#work-title .chaos-letter');
-  let editorialFrame=0;
-  const updateEditorialSequence=()=>{
-    if(statement){
-      const cover=statement.closest('.manifesto--cover');
-      const rect=cover.getBoundingClientRect();
-      const progress=Math.max(0,Math.min(1,-rect.top/Math.max(rect.height-innerHeight*.2,1)));
-      const tension=Math.sin(progress*Math.PI);
-      statement.style.setProperty('--vestir-x',`${-22*tension}px`);
-      statement.style.setProperty('--tambien-y',`${18*tension}px`);
-      statement.style.setProperty('--es-x',`${-10*tension}px`);
-      statement.style.setProperty('--contar-x',`${28*tension}px`);
-      statement.style.setProperty('--contar-scale',`${1+.16*tension}`);
-      statement.classList.toggle('is-statement-tension',progress>.38&&progress<.78);
-    }
-    if(workHeading){
-      const rect=workHeading.getBoundingClientRect();
-      const progress=Math.max(0,Math.min(1,(innerHeight-rect.top)/(innerHeight*.72)));
-      workHeading.style.setProperty('--work-shift',`${(1-progress)*46}px`);
-      workHeading.style.setProperty('--work-progress',progress.toFixed(3));
-      workHeading.style.setProperty('--work-opacity',`${.38+progress*.62}`);
-      workLetters.forEach((letter,index)=>{
-        const flow=index%3===0?-1:index%3===1?.45:1;
-        letter.style.setProperty('--work-letter-y',`${(1-progress)*46*flow}px`);
-      });
-    }
-  };
-  const requestEditorialSequence=()=>{
-    if(editorialFrame)return;
-    editorialFrame=requestAnimationFrame(()=>{editorialFrame=0;updateEditorialSequence()});
-  };
-  addEventListener('scroll',requestEditorialSequence,{passive:true});
-  addEventListener('resize',requestEditorialSequence);
-  updateEditorialSequence();
-}
-
-// La portada comparte el ritmo revelar → fragmentar → recomponer del archivo.
-if (!reducedMotion) {
-  const cover = $('.manifesto--cover');
-  if (cover) {
-    let coverFrame = 0;
-    const updateCover = () => {
-      const rect = cover.getBoundingClientRect();
-      const progress = Math.max(0, Math.min(1, -rect.top / Math.max(rect.height, 1)));
-      cover.style.setProperty('--cover-scroll', progress.toFixed(3));
-    };
-    const requestCover = () => {
-      if (coverFrame) return;
-      coverFrame = requestAnimationFrame(() => { coverFrame = 0; updateCover(); });
-    };
-    addEventListener('scroll', requestCover, { passive: true });
-    addEventListener('resize', requestCover);
-    updateCover();
-  }
-}
-
-// Movimiento editorial: capas lentas y contenidas, inspirado en el ritmo del referente.
-if (!reducedMotion) {
-  const hero = $('.hero');
-  if (hero) {
-  const updateMotion = () => {
-    const heroRect = hero.getBoundingClientRect();
-    const progress = Math.max(-1, Math.min(1, -heroRect.top / Math.max(innerHeight, 1)));
-    hero.style.setProperty('--scroll-name', `${progress * -24}px`);
-    hero.style.setProperty('--scroll-copy', `${progress * -18}px`);
-  };
-  let motionFrame = 0;
-  const requestMotion = () => {
-    if (motionFrame) return;
-    motionFrame = requestAnimationFrame(() => {
-      updateMotion();
-      motionFrame = 0;
-    });
-  };
-  addEventListener('scroll', requestMotion, { passive: true });
-  if (matchMedia('(pointer:fine)').matches) {
-    hero.addEventListener('pointermove', event => {
-      const rect = hero.getBoundingClientRect();
-      const x = (event.clientX - rect.left) / rect.width - .5;
-      const y = (event.clientY - rect.top) / rect.height - .5;
-      hero.style.setProperty('--pointer-x', `${x * 18}px`);
-      hero.style.setProperty('--pointer-y', `${y * 14}px`);
-      hero.style.setProperty('--copy-x', `${x * -8}px`);
-      hero.style.setProperty('--copy-y', `${y * -5}px`);
-    });
-    hero.addEventListener('pointerleave', () => {
-      hero.style.setProperty('--pointer-x', '0px');
-      hero.style.setProperty('--pointer-y', '0px');
-      hero.style.setProperty('--copy-x', '0px');
-      hero.style.setProperty('--copy-y', '0px');
-    });
-  }
-  updateMotion();
-  }
+  const headings=$$('#work-title,.about-preview h2,.contact h2');
+  const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(!entry.isIntersecting)return;const title=entry.target;$$('.chaos-letter',title).forEach((letter,index)=>playAssembly(letter,[{opacity:0,transform:`translate3d(${index%2?20:-18}px,${index%3?42:-34}px,0)`},{opacity:1,transform:'translate3d(0,0,0)'}],{delay:index*22,duration:520}));observer.unobserve(title)}),{threshold:.1,rootMargin:'0px 0px -15% 0px'});
+  headings.forEach(title=>observer.observe(title));
 }

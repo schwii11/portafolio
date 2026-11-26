@@ -101,33 +101,24 @@ function prepareScrollComposition(){
   if(document.body.dataset.scrollMotionReady)return;
   document.body.dataset.scrollMotionReady='true';
   const vectors={kero:[[-58,54],[46,-28],[-34,42],[26,34]],lacrima:[[0,96],[0,128],[0,74],[0,108]],lithos:[[-52,38],[54,34],[-38,62],[48,46]],aeris:[[-18,78],[24,104],[-14,66],[18,88]]}[projectKey]||[[0,52],[0,72],[0,48],[0,64]];
-  let frame=0;
-  const update=()=>{
-    const factor=innerWidth<=900?.42:1;
-    const hero=q('.project-hero');
-    if(hero){
-      const rect=hero.getBoundingClientRect();
-      const progress=Math.max(0,Math.min(1,-rect.top/Math.max(rect.height*.85,1)));
-      hero.style.setProperty('--hero-title-y',`${-22*progress*factor}px`);
-      hero.style.setProperty('--hero-media-y',`${18*progress*factor}px`);
-      hero.style.setProperty('--hero-media-scale',`${1-progress*.025}`);
-    }
-    document.querySelectorAll('.project-image').forEach((item,index)=>{
-      item.classList.add('motion-linked');
-      const rect=item.getBoundingClientRect();
-      const progress=Math.max(0,Math.min(1,(innerHeight-rect.top)/(innerHeight+rect.height*.28)));
-      const entering=1-progress;
-      const [x,y]=vectors[index%vectors.length];
-      item.style.setProperty('--gallery-x',`${x*entering*factor}px`);
-      item.style.setProperty('--gallery-y',`${y*entering*factor}px`);
-      item.style.setProperty('--gallery-mask',`${18*entering*factor}%`);
-      item.style.setProperty('--gallery-scale',`${1-entering*.035*factor}`);
-    });
-  };
-  const request=()=>{if(frame)return;frame=requestAnimationFrame(()=>{frame=0;update()})};
-  addEventListener('scroll',request,{passive:true});
-  addEventListener('resize',request);
-  update();
+  const ease='cubic-bezier(0.16,1,0.3,1)';
+  const play=(element,keyframes,options={})=>element?.animate(keyframes,{duration:580,easing:ease,fill:'none',...options});
+  const hero=q('.project-hero');
+  requestAnimationFrame(()=>{
+    play(q('h1',hero),[{opacity:0,transform:'translate3d(-36px,52px,0)'},{opacity:1,transform:'translate3d(0,0,0)'}],{duration:620});
+    play(q('.project-hero-media',hero),[{opacity:.1,clipPath:'inset(9% 0 8% 0)',transform:'translate3d(58px,28px,0) scale(1.045)'},{opacity:1,clipPath:'inset(0)',transform:'translate3d(0,0,0) scale(1)'}],{delay:45,duration:650});
+    [...hero.querySelectorAll('.project-hero__number,.project-links,.project-hero__lead,.project-hero__meta')].forEach((item,index)=>play(item,[{opacity:0,transform:'translate3d(0,20px,0)'},{opacity:1,transform:'translate3d(0,0,0)'}],{delay:100+index*55,duration:430}));
+  });
+  const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{
+    if(!entry.isIntersecting)return;
+    const item=entry.target;
+    const index=Number(item.dataset.motionIndex||0);
+    const factor=innerWidth<=900?.55:1;
+    const [x,y]=vectors[index%vectors.length];
+    play(item,[{opacity:0,clipPath:'inset(12% 0 8% 0)',transform:`translate3d(${x*factor}px,${y*factor}px,0) scale(1.035)`},{opacity:1,clipPath:'inset(0)',transform:'translate3d(0,0,0) scale(1)'}],{duration:620,delay:(index%2)*65});
+    observer.unobserve(item);
+  }),{threshold:.08,rootMargin:'0px 0px -15% 0px'});
+  document.querySelectorAll('.project-image,.project-video,.project-live,.project-narrative').forEach((item,index)=>{item.dataset.motionIndex=index;observer.observe(item)});
 }
 
 function prepareLightbox(){

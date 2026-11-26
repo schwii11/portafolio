@@ -400,3 +400,9 @@
   .project-page[data-project="aeris"] .project-image{margin-bottom:64px}
   .project-hero:not(.project-hero--digital) .project-hero__lead{padding-right:0}
 }
+
+@media(max-width:600px){
+  .project-narrative h2{max-width:100%;font-size:clamp(2.1rem,9.5vw,3.5rem);line-height:.88}
+  .project-narrative h2 .chaos-word{max-width:100%}
+  .project-narrative h2 .chaos-space{display:inline-block;width:.22em}
+}

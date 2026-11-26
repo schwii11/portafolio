@@ -1,5 +1,8 @@
 (function(){
-  if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const ease='cubic-bezier(0.16,1,0.3,1)';
+  const play=(element,keyframes,options={})=>element?.animate(keyframes,{duration:540,easing:ease,fill:'none',...options});
+
   function wrap(element){
     if(!element||element.dataset.chaosReady)return;
     const label=element.textContent.trim();
@@ -8,43 +11,29 @@
     element.dataset.chaosReady='true';
     element.setAttribute('aria-label',label);
     element.innerHTML=label.split(/\s+/).map(word=>`<span class="chaos-word" aria-hidden="true">${[...word].map(character=>{
-      const x=Math.round((Math.random()-.5)*34);
-      const y=Math.round((Math.random()-.5)*24);
-      const rotate=Math.round((Math.random()-.5)*34);
-      const scale=(.86+Math.random()*.34).toFixed(2);
-      return `<span class="chaos-letter" style="--chaos-x:${x}px;--chaos-y:${y}px;--chaos-r:${rotate}deg;--chaos-s:${scale};--chaos-delay:${index++*7}ms">${character}</span>`;
+      const direction=index%4;
+      const x=[-24,18,-12,26][direction];
+      const y=[-34,42,26,-28][direction];
+      const rotate=[-8,6,-4,7][direction];
+      return `<span class="chaos-letter" style="--chaos-x:${x}px;--chaos-y:${y}px;--chaos-r:${rotate}deg;--chaos-s:1;--chaos-delay:${index++*7}ms">${character}</span>`;
     }).join('')}</span>`).join('<span class="chaos-space" aria-hidden="true">&nbsp;</span>');
     element.addEventListener('pointerenter',()=>element.classList.add('is-chaotic'));
     element.addEventListener('pointerleave',()=>element.classList.remove('is-chaotic'));
   }
-  addEventListener('DOMContentLoaded',()=>document.querySelectorAll('#focus-title,#method-title,#closing-title').forEach(wrap));
+
+  function assemble(section){
+    if(section.dataset.assembled)return;
+    section.dataset.assembled='true';
+    const title=section.querySelector('h1,h2');
+    [...(title?.querySelectorAll('.chaos-letter')||[])].forEach((letter,index)=>play(letter,[{opacity:0,transform:`translate3d(${index%2?22:-18}px,${index%3?42:-34}px,0)`},{opacity:1,transform:'translate3d(0,0,0)'}],{delay:index*20,duration:520}));
+    [...section.children].filter(item=>item!==title).forEach((item,index)=>play(item,[{opacity:0,transform:`translate3d(${index%2?24:-20}px,24px,0)`},{opacity:1,transform:'translate3d(0,0,0)'}],{delay:90+index*65,duration:460}));
+  }
+
   addEventListener('DOMContentLoaded',()=>{
-    const elements=[...document.querySelectorAll('.about-opening>*,.about-focus>*,.about-method>*,.about-closing>*')];
-    elements.forEach((element,index)=>{element.classList.add('scroll-enter');element.style.setProperty('--enter-delay',`${index%3*80}ms`)});
-    if(matchMedia('(prefers-reduced-motion: reduce)').matches){elements.forEach(element=>element.classList.add('is-visible'));return}
-    const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-visible');observer.unobserve(entry.target)}}),{threshold:.12,rootMargin:'0px 0px -8% 0px'});
-    elements.forEach(element=>observer.observe(element));
-  });
-  addEventListener('DOMContentLoaded',()=>{
-    const sections=[...document.querySelectorAll('.about-focus,.about-method,.about-closing')];
-    let frame=0;
-    const update=()=>sections.forEach(section=>{
-      const rect=section.getBoundingClientRect();
-      const progress=Math.max(0,Math.min(1,(innerHeight-rect.top)/(innerHeight+rect.height*.35)));
-      const tension=Math.sin(progress*Math.PI);
-      const factor=innerWidth<=800?.42:1;
-      section.style.setProperty('--about-letter-shift',`${18*tension*factor}px`);
-      section.style.setProperty('--about-copy-y',`${(1-progress)*44*factor}px`);
-      section.style.setProperty('--about-group-gap',`${(1-progress)*28*factor}px`);
-      section.style.setProperty('--about-group-gap-neg',`${(1-progress)*-28*factor}px`);
-      section.querySelectorAll('h2 .chaos-letter').forEach((letter,index)=>{
-        const flow=index%3===0?-1:index%3===1?.45:1;
-        letter.style.setProperty('--about-letter-y',`${18*tension*factor*flow}px`);
-      });
-    });
-    const request=()=>{if(frame)return;frame=requestAnimationFrame(()=>{frame=0;update()})};
-    addEventListener('scroll',request,{passive:true});
-    addEventListener('resize',request);
-    update();
+    document.querySelectorAll('#focus-title,#method-title,#closing-title').forEach(wrap);
+    const sections=[...document.querySelectorAll('.about-opening,.about-focus,.about-method,.about-closing')];
+    if(reduced)return;
+    const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){assemble(entry.target);observer.unobserve(entry.target)}}),{threshold:.08,rootMargin:'0px 0px -15% 0px'});
+    sections.forEach(section=>observer.observe(section));
   });
 })();

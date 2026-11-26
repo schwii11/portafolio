@@ -271,7 +271,7 @@
 .project-hero--digital{grid-template-rows:auto auto auto auto;overflow:visible}
 .project-hero--digital h1{grid-column:1/13;grid-row:2;max-width:12ch;margin:clamp(24px,4vw,56px) 0 0;font-size:clamp(4.2rem,7.2vw,8rem);line-height:.8}
 .project-page[data-project="escuchar-la-imagen"] .project-hero--digital h1{max-width:12ch;font-size:clamp(3.7rem,6.4vw,7rem)}
-.project-hero--digital .project-hero-media{grid-column:5/13;grid-row:3/5;aspect-ratio:16/10;margin-top:clamp(34px,5vw,74px);box-shadow:none;border:0;background:transparent}
+.project-hero--digital .project-hero-media{grid-column:7/13;grid-row:2/4;align-self:center;aspect-ratio:16/10;margin-top:clamp(8px,1.4vw,22px);box-shadow:none;border:0;background:transparent}
 .project-hero--digital .project-hero__lead{grid-column:1/5;grid-row:3;margin-top:clamp(34px,5vw,74px)}
 .project-hero--digital .project-hero__meta{grid-column:1/5;grid-row:4;margin-top:22px}
 .project-hero--digital .project-links{grid-column:9/13;grid-row:1}

@@ -131,13 +131,27 @@ function prepareLightbox(){
   const canvas=q('.project-lightbox__canvas',lightbox);
   const stage=q('.project-lightbox__stage',lightbox);
   const caption=q('#project-lightbox-caption',lightbox);
-  let zoom=1;
+  const initialZoom=.85;
+  let zoom=initialZoom;
   const setZoom=value=>{
-    zoom=Math.min(4,Math.max(1,value));
-    canvas.style.width=`${zoom*100}%`;
-    canvas.style.height=`${zoom*100}%`;
+    const previousWidth=Math.max(canvas.scrollWidth,stage.clientWidth);
+    const previousHeight=Math.max(canvas.scrollHeight,stage.clientHeight);
+    const focusX=(stage.scrollLeft+stage.clientWidth/2)/previousWidth;
+    const focusY=(stage.scrollTop+stage.clientHeight/2)/previousHeight;
+    zoom=Math.min(4,Math.max(.5,value));
+    const canvasScale=Math.max(1,zoom);
+    const imageScale=Math.min(1,zoom);
+    canvas.style.width=`${canvasScale*100}%`;
+    canvas.style.height=`${canvasScale*100}%`;
+    image.style.width=`${imageScale*100}%`;
+    image.style.height=`${imageScale*100}%`;
+    stage.classList.toggle('is-zoomed',zoom>1);
     q('[data-lightbox-action="reset"]',lightbox).textContent=`${Math.round(zoom*100)}%`;
-    if(zoom===1){stage.scrollTop=0;stage.scrollLeft=0}
+    requestAnimationFrame(()=>{
+      if(zoom<=1){stage.scrollTop=0;stage.scrollLeft=0;return}
+      stage.scrollLeft=focusX*canvas.scrollWidth-stage.clientWidth/2;
+      stage.scrollTop=focusY*canvas.scrollHeight-stage.clientHeight/2;
+    });
   };
   document.querySelectorAll('.project-image__visual').forEach(frame=>{
     if(frame.dataset.lightboxReady)return;
@@ -150,8 +164,8 @@ function prepareLightbox(){
       image.src=source.currentSrc||source.src;
       image.alt=source.alt;
       caption.textContent=source.alt;
-      setZoom(1);
       lightbox.showModal();
+      setZoom(initialZoom);
     };
     frame.addEventListener('click',open);
     frame.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();open()}});
@@ -163,7 +177,7 @@ function prepareLightbox(){
     if(action==='close')lightbox.close();
     if(action==='in')setZoom(zoom+.25);
     if(action==='out')setZoom(zoom-.25);
-    if(action==='reset')setZoom(1);
+    if(action==='reset')setZoom(initialZoom);
     if(event.target===lightbox)lightbox.close();
   });
   stage.addEventListener('wheel',event=>{
@@ -171,6 +185,26 @@ function prepareLightbox(){
     event.preventDefault();
     setZoom(zoom+(event.deltaY<0?.2:-.2));
   },{passive:false});
+  let drag=null;
+  stage.addEventListener('pointerdown',event=>{
+    if(zoom<=1)return;
+    drag={x:event.clientX,y:event.clientY,left:stage.scrollLeft,top:stage.scrollTop};
+    stage.classList.add('is-dragging');
+    stage.setPointerCapture(event.pointerId);
+  });
+  stage.addEventListener('pointermove',event=>{
+    if(!drag)return;
+    stage.scrollLeft=drag.left-(event.clientX-drag.x);
+    stage.scrollTop=drag.top-(event.clientY-drag.y);
+  });
+  const stopDrag=event=>{
+    if(!drag)return;
+    drag=null;
+    stage.classList.remove('is-dragging');
+    if(stage.hasPointerCapture(event.pointerId))stage.releasePointerCapture(event.pointerId);
+  };
+  stage.addEventListener('pointerup',stopDrag);
+  stage.addEventListener('pointercancel',stopDrag);
 }
 
 function prepareTitleInteraction(){

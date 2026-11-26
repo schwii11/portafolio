@@ -313,9 +313,11 @@
 .project-lightbox__toolbar>div{display:flex;align-items:center;gap:8px}
 .project-lightbox button{min-width:42px;height:36px;padding:0 12px;border:1px solid rgba(242,240,235,.28);background:transparent;color:var(--paper);font:500 .68rem var(--mono);letter-spacing:.05em;cursor:pointer}
 .project-lightbox button:hover,.project-lightbox button:focus-visible{border-color:var(--project-accent);color:var(--project-accent)}
-.project-lightbox__stage{height:calc(100dvh - 64px);overflow:auto;overscroll-behavior:contain}
-.project-lightbox__canvas{width:100%;height:100%;min-width:100%;min-height:100%;display:grid;place-items:center}
-.project-lightbox__canvas img{display:block;width:100%;height:100%;max-width:none;max-height:none;object-fit:contain;image-rendering:auto}
+.project-lightbox__stage{height:calc(100dvh - 64px);overflow:auto;overscroll-behavior:contain;cursor:default;touch-action:pan-x pan-y}
+.project-lightbox__stage.is-zoomed{cursor:grab}
+.project-lightbox__stage.is-dragging{cursor:grabbing;user-select:none}
+.project-lightbox__canvas{width:100%;height:100%;min-width:100%;min-height:100%;display:grid;place-items:center;padding:clamp(18px,3vw,48px);box-sizing:border-box}
+.project-lightbox__canvas img{display:block;width:85%;height:85%;max-width:none;max-height:none;object-fit:contain;image-rendering:auto;pointer-events:none}
 
 @media(max-width:700px){
   .project-lightbox__toolbar{height:58px;padding:0 12px}

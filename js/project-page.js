@@ -140,11 +140,13 @@ function prepareLightbox(){
     const focusY=(stage.scrollTop+stage.clientHeight/2)/previousHeight;
     zoom=Math.min(4,Math.max(.5,value));
     const canvasScale=Math.max(1,zoom);
-    const imageScale=Math.min(1,zoom);
-    canvas.style.width=`${canvasScale*100}%`;
-    canvas.style.height=`${canvasScale*100}%`;
-    image.style.width=`${imageScale*100}%`;
-    image.style.height=`${imageScale*100}%`;
+    const stageWidth=stage.clientWidth;
+    const stageHeight=stage.clientHeight;
+    const frameGap=Math.min(64,Math.max(24,stageWidth*.045));
+    canvas.style.width=`${Math.round(stageWidth*canvasScale)}px`;
+    canvas.style.height=`${Math.round(stageHeight*canvasScale)}px`;
+    image.style.width=`${Math.max(1,Math.round(stageWidth*zoom-frameGap))}px`;
+    image.style.height=`${Math.max(1,Math.round(stageHeight*zoom-frameGap))}px`;
     stage.classList.toggle('is-zoomed',zoom>1);
     q('[data-lightbox-action="reset"]',lightbox).textContent=`${Math.round(zoom*100)}%`;
     requestAnimationFrame(()=>{

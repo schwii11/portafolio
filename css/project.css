@@ -288,3 +288,62 @@
   .project-image__visual{aspect-ratio:auto!important}
   .project-image img{height:auto;object-fit:contain!important;object-position:center!important}
 }
+
+/* Cuatro aperturas físicas, cuatro ritmos editoriales. */
+@media(min-width:901px){
+  .project-page[data-project="kero"] .project-hero-media__main{inset:0 0 0 34%}
+  .project-page[data-project="kero"] .project-hero-media__main img{object-position:center 22%}
+  .project-page[data-project="kero"] .project-hero-media__secondary{left:29%;right:auto;top:auto;bottom:5%;width:min(18vw,270px);aspect-ratio:3/4;transform:rotate(-2deg)}
+
+  .project-page[data-project="lacrima"] .project-hero-media__main{inset:5% 5% 4% 38%}
+  .project-page[data-project="lacrima"] .project-hero-media__main img{object-fit:contain;object-position:center;background:#080808}
+  .project-page[data-project="lacrima"] .project-hero-media__secondary{right:3%;top:8%;width:min(19vw,285px);aspect-ratio:3/4}
+
+  .project-page[data-project="lithos"] .project-hero-media__main{inset:0 0 0 31%}
+  .project-page[data-project="lithos"] .project-hero-media__main img{object-position:center 48%}
+  .project-page[data-project="lithos"] .project-hero-media__secondary{right:4%;top:auto;bottom:5%;width:min(22vw,330px);aspect-ratio:4/5;transform:rotate(1.5deg)}
+
+  .project-page[data-project="aeris"] .project-hero-media__main{inset:0 0 0 43%}
+  .project-page[data-project="aeris"] .project-hero-media__main img{object-position:center 20%}
+  .project-page[data-project="aeris"] .project-hero-media__secondary{left:32%;right:auto;top:9%;width:min(21vw,315px);aspect-ratio:3/4;transform:rotate(-1.5deg)}
+
+  .project-page[data-project="kero"] .project-gallery,
+  .project-page[data-project="lacrima"] .project-gallery,
+  .project-page[data-project="lithos"] .project-gallery,
+  .project-page[data-project="aeris"] .project-gallery{align-items:start}
+
+  .project-page[data-project="kero"] .project-image--3,
+  .project-page[data-project="lacrima"] .project-image--4,
+  .project-page[data-project="lithos"] .project-image--4,
+  .project-page[data-project="aeris"] .project-image--3{margin-top:0}
+}
+
+/* Las fotos conservan su proporción y la información siempre queda debajo. */
+.project-page[data-project="kero"] .project-image__visual,
+.project-page[data-project="lacrima"] .project-image__visual,
+.project-page[data-project="lithos"] .project-image__visual,
+.project-page[data-project="aeris"] .project-image__visual{background:transparent}
+.project-page[data-project="kero"] .project-image figcaption,
+.project-page[data-project="lacrima"] .project-image figcaption,
+.project-page[data-project="lithos"] .project-image figcaption,
+.project-page[data-project="aeris"] .project-image figcaption{margin-top:20px;padding-right:clamp(8px,2vw,28px)}
+
+@media(max-width:900px){
+  .project-page[data-project="kero"] .project-hero,
+  .project-page[data-project="lacrima"] .project-hero,
+  .project-page[data-project="lithos"] .project-hero,
+  .project-page[data-project="aeris"] .project-hero{min-height:82svh}
+  .project-page[data-project="kero"] .project-hero-media__main,
+  .project-page[data-project="lacrima"] .project-hero-media__main,
+  .project-page[data-project="lithos"] .project-hero-media__main,
+  .project-page[data-project="aeris"] .project-hero-media__main{inset:8% -10% 0 26%;opacity:.74}
+  .project-page[data-project="lacrima"] .project-hero-media__main img{object-fit:contain}
+  .project-page[data-project="kero"] .project-hero-media__secondary,
+  .project-page[data-project="lacrima"] .project-hero-media__secondary,
+  .project-page[data-project="lithos"] .project-hero-media__secondary,
+  .project-page[data-project="aeris"] .project-hero-media__secondary{display:none}
+  .project-page[data-project="kero"] .project-image,
+  .project-page[data-project="lacrima"] .project-image,
+  .project-page[data-project="lithos"] .project-image,
+  .project-page[data-project="aeris"] .project-image{margin-bottom:64px}
+}

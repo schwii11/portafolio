@@ -428,3 +428,28 @@
     line-height:.84;
   }
 }
+
+/* Florecimiento contenido — apertura y secuencia fotográfica final. */
+.project-page[data-project="florecimiento-contenido"] #project-title{max-width:8.7ch;font-size:clamp(4.1rem,8.3vw,9.2rem);line-height:.77}
+.project-page[data-project="florecimiento-contenido"] #project-title .chaos-word:nth-child(3){display:block;color:var(--project-accent)}
+.project-page[data-project="florecimiento-contenido"] .project-hero-media__main{inset:0 0 0 43%}
+.project-page[data-project="florecimiento-contenido"] .project-hero-media__main img{object-position:center 25%}
+.project-page[data-project="florecimiento-contenido"] .project-hero-media__secondary{right:3%;top:7%;width:min(19vw,290px);aspect-ratio:1/1}
+.project-page[data-project="florecimiento-contenido"] .project-image__visual{cursor:zoom-in;background:transparent}
+@media(min-width:901px){
+  .project-page[data-project="florecimiento-contenido"] .project-image--1{grid-column:1/7}
+  .project-page[data-project="florecimiento-contenido"] .project-image--1 .project-image__visual{aspect-ratio:3/5}
+  .project-page[data-project="florecimiento-contenido"] .project-image--2{grid-column:7/13;margin-top:9vw}
+  .project-page[data-project="florecimiento-contenido"] .project-image--2 .project-image__visual{aspect-ratio:4/5}
+  .project-page[data-project="florecimiento-contenido"] .project-image--3{grid-column:3/11;margin-top:-4vw}
+  .project-page[data-project="florecimiento-contenido"] .project-image--3 .project-image__visual{aspect-ratio:1/1}
+  .project-page[data-project="florecimiento-contenido"] .project-narrative header{grid-column:1/8}
+  .project-page[data-project="florecimiento-contenido"] .project-narrative__origin{grid-column:8/13}
+  .project-page[data-project="florecimiento-contenido"] .project-narrative__material{grid-column:1/5}
+  .project-page[data-project="florecimiento-contenido"] .project-narrative__process{grid-column:5/9}
+  .project-page[data-project="florecimiento-contenido"] .project-narrative__result{grid-column:9/13}
+}
+@media(max-width:600px){
+  .project-page[data-project="florecimiento-contenido"] #project-title{font-size:clamp(2.7rem,13vw,4.4rem)}
+  .project-page[data-project="florecimiento-contenido"] .project-hero-media__main{inset:0 -22% 0 18%}
+}

@@ -10,14 +10,14 @@ La web incluye:
 
 - Landing con statement, archivo de proyectos y contacto directo.
 - Página About independiente con intereses, metodología, herramientas y trayectoria.
-- Siete subpáginas: K’ero, Lacrima, Lithos, Aeris, Partitura Corporal, Infancias Interrumpidas y DESBORDE.
+- Ocho subpáginas: K’ero, Lacrima, Lithos, Aeris, Florecimiento contenido, Partitura Corporal, Infancias Interrumpidas y DESBORDE.
 - Enlaces a repositorios y experiencias publicadas cuando están disponibles.
 - Diseño responsive para teléfono y computador.
 - Landing responsive.
-- Archivo filtrable con siete proyectos identificados y explicados en la página principal.
-- Siete páginas editoriales bilingües con navegación continua entre proyectos.
+- Archivo filtrable con ocho proyectos identificados y explicados en la página principal.
+- Ocho páginas editoriales bilingües con navegación continua entre proyectos.
 
-Las fotografías disponibles de K’ero, Lacrima, Lithos y Aeris están incorporadas sin filtros que alteren sus colores. Los tres proyectos digitales incluyen capturas reales, registros audiovisuales y enlaces a sus repositorios y experiencias.
+Las fotografías disponibles de K’ero, Lacrima, Lithos, Aeris y Florecimiento contenido están incorporadas sin filtros que alteren sus colores. Los tres proyectos digitales incluyen capturas reales, registros audiovisuales y enlaces a sus repositorios y experiencias.
 
 ## Ejecución local
 
@@ -34,7 +34,7 @@ js/app.js
 js/project-content.js
 js/project-shell.js
 js/project-page.js
-projects/{kero,lacrima,lithos,aeris,dos-realidades,escuchar-la-imagen,tocar-la-imagen}/index.html
+projects/{kero,lacrima,lithos,aeris,florecimiento-contenido,dos-realidades,escuchar-la-imagen,tocar-la-imagen}/index.html
 assets/
 ```
 

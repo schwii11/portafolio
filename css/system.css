@@ -62,7 +62,7 @@ body:not(.about-page):not(.project-page) .site-header{animation:navEntry .7s cub
 .section-heading h2{min-width:0;margin:0;font:400 clamp(5rem,10.5vw,10.8rem)/.8 var(--display);letter-spacing:-.065em}
 .section-heading>p:last-child{max-width:33ch;margin:0;padding-bottom:.35rem;font:italic 400 clamp(1.05rem,1.35vw,1.35rem)/1.5 var(--display);color:rgba(242,240,235,.78)}
 .filters{display:flex;align-items:center;gap:28px;margin:0 0 clamp(30px,3.5vw,48px);padding:0 0 16px;border-bottom:1px solid var(--line)}
-.filters::before{content:'ARCHIVO / 07';margin-right:auto;color:rgba(242,240,235,.45);font:500 .72rem var(--mono);letter-spacing:.1em}
+.filters::before{content:'ARCHIVO / 08';margin-right:auto;color:rgba(242,240,235,.45);font:500 .72rem var(--mono);letter-spacing:.1em}
 .filters button{border:0;padding:0;background:none;cursor:pointer;font:500 .75rem var(--mono)}
 .filters button.is-active{color:var(--red)}
 .project-archive{border-top:1px solid var(--line)}
@@ -618,4 +618,18 @@ body:not(.about-page):not(.project-page) .site-header{animation:navEntry .7s cub
   .section-heading h2,.contact h2{max-width:100%;font-size:clamp(3rem,16vw,4rem)!important;line-height:.86}
   .project-archive .project-row__title h3,
   .project-story[data-project="escuchar-la-imagen"] .project-row__title h3{max-width:100%;font-size:clamp(2rem,8.8vw,2.8rem)!important;line-height:.9}
+}
+
+/* Florecimiento contenido — composición final dentro del archivo. */
+.project-story[data-project="florecimiento-contenido"]{padding-top:clamp(96px,11vw,160px)}
+.project-story[data-project="florecimiento-contenido"] .project-row__title h3{max-width:13ch}
+.project-story[data-project="florecimiento-contenido"] .project-row__title h3 .chaos-word:nth-child(3){display:block;color:var(--red)}
+.project-story[data-project="florecimiento-contenido"] .project-story__collage{min-height:clamp(620px,65vw,900px)}
+.project-story[data-project="florecimiento-contenido"] .project-story__primary{inset:0 31% 4% 0}
+.project-story[data-project="florecimiento-contenido"] .project-story__primary img{object-position:center 24%}
+.project-story[data-project="florecimiento-contenido"] .project-story__secondary{right:0;left:auto;bottom:0;width:43%;height:48%}
+@media(max-width:800px){
+  .project-story[data-project="florecimiento-contenido"] .project-story__collage{min-height:560px}
+  .project-story[data-project="florecimiento-contenido"] .project-story__primary{inset:0 13% 11% 0!important}
+  .project-story[data-project="florecimiento-contenido"] .project-story__secondary{width:52%;height:40%}
 }

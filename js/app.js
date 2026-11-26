@@ -10,7 +10,7 @@ const translations = {
     heroStatement: 'Entre el cuerpo, la materia y la interacción.',
     heroDescriptor: 'FASHION / MATERIAL / DIGITAL EXPERIMENTATION',
     explore: 'EXPLORAR PROYECTOS', workTitle: 'WORK.',
-    workIntro: 'Siete proyectos entre moda, materialidad y experiencias digitales, explicados directamente en el recorrido principal.',
+    workIntro: 'Ocho proyectos entre moda, materialidad y experiencias digitales, explicados directamente en el recorrido principal.',
     aboutTitle: 'ABOUT.',
     aboutCopy: 'Soy Katalina Ríos, estudiante de Diseño con mención en Sistema Moda. Me interesan la experimentación textil, los biomateriales, el cuerpo, la materialidad y las experiencias digitales.',
     contactTitle: 'CONTACT.'
@@ -21,7 +21,7 @@ const translations = {
     heroStatement: 'Between the body, material and interaction.',
     heroDescriptor: 'FASHION / MATERIAL / DIGITAL EXPERIMENTATION',
     explore: 'EXPLORE PROJECTS', workTitle: 'WORK.',
-    workIntro: 'Seven projects spanning fashion, materiality and digital experiences, explained directly in the main journey.',
+    workIntro: 'Eight projects spanning fashion, materiality and digital experiences, explained directly in the main journey.',
     aboutTitle: 'ABOUT.',
     aboutCopy: 'I am Katalina Ríos, a Design student specialising in Fashion Systems. My interests include textile experimentation, biomaterials, the body, materiality and digital experiences.',
     contactTitle: 'CONTACT.'
@@ -49,7 +49,7 @@ function renderProjects() {
     return `
       <article class="project-row project-story project-story--${project.category} reveal" data-category="${project.category}" data-project="${project.id}" data-title="${project.title}">
         <header class="project-story__header">
-          <p class="project-story__index mono">${project.number} / 07</p>
+          <p class="project-story__index mono">${project.number} / 08</p>
           <div class="project-row__title"><p class="mono">${project.discipline}${project.year ? ` / ${project.year}` : ''}</p><h3>${project.title}</h3></div>
           <p class="project-story__summary">${project.summary}</p>
         </header>

@@ -4,9 +4,9 @@ const q=(selector,root=document)=>root.querySelector(selector);
 if('scrollRestoration' in history)history.scrollRestoration='manual';
 addEventListener('pageshow',()=>scrollTo(0,0));
 let lang='es';
-const physicalProjects=['kero','lacrima','lithos','aeris'];
+const physicalProjects=['kero','lacrima','lithos','aeris','florecimiento-contenido'];
 
-const nextRoutes={kero:['lacrima','LACRIMA'],lacrima:['lithos','LITHOS'],lithos:['aeris','AERIS'],aeris:['dos-realidades','PARTITURA CORPORAL'],'dos-realidades':['escuchar-la-imagen','INFANCIAS INTERRUMPIDAS'],'escuchar-la-imagen':['tocar-la-imagen','DESBORDE'],'tocar-la-imagen':['kero','K’ERO']};
+const nextRoutes={kero:['lacrima','LACRIMA'],lacrima:['lithos','LITHOS'],lithos:['aeris','AERIS'],aeris:['florecimiento-contenido','FLORECIMIENTO CONTENIDO'],'florecimiento-contenido':['dos-realidades','PARTITURA CORPORAL'],'dos-realidades':['escuchar-la-imagen','INFANCIAS INTERRUMPIDAS'],'escuchar-la-imagen':['tocar-la-imagen','DESBORDE'],'tocar-la-imagen':['kero','K’ERO']};
 
 function renderHeroMedia(){
   const hero=q('.project-hero');
@@ -26,7 +26,9 @@ function renderGallery(content){
   const gallery=q('#gallery');
   const video=project.video?`<article class="project-video"><header><p class="project-kicker">${lang==='es'?'REGISTRO DE LA EXPERIENCIA':'EXPERIENCE RECORD'}</p><p>${content.lead}</p></header><video controls playsinline preload="metadata" poster="${project.poster||''}"><source src="${project.video}" type="video/mp4">${lang==='es'?'Tu navegador no puede reproducir este video.':'Your browser cannot play this video.'}</video></article>`:'';
   if(project.images.length){
-    const captions=[['ORIGEN',content.concept[0]],['MATERIALIDAD',content.research.join(' · ')],['DESARROLLO',content.process],['RESULTADO',content.result]];
+    const captions=projectKey==='florecimiento-contenido'
+      ? [['CONCEPTO',content.concept[0]],['EXPERIMENTACIÓN TEXTIL',content.research.join(' · ')],['SISTEMA DE ACTIVACIÓN',content.process]]
+      : [['ORIGEN',content.concept[0]],['MATERIALIDAD',content.research.join(' · ')],['DESARROLLO',content.process],['RESULTADO',content.result]];
     gallery.innerHTML=video+project.images.map(([src,alt],index)=>{
       const [label,text]=captions[Math.min(index,captions.length-1)];
       return `<figure class="project-image project-image--${index+1}"><div class="project-image__visual"><img src="${src}" alt="${alt}" loading="${index?'lazy':'eager'}"></div><figcaption><span>${label}</span><p>${text}</p></figcaption></figure>`;
@@ -40,7 +42,7 @@ function render(){
   const content=project[lang];
   document.documentElement.lang=lang;
   document.title=`${project.title} — Katalina Ríos`;
-  q('#project-number').textContent=`${project.number} / 07`;
+  q('#project-number').textContent=`${project.number} / 08`;
   q('#project-title').textContent=project.title;
   q('#project-discipline').textContent=project.discipline;
   q('#project-year').textContent=project.year;
@@ -54,8 +56,8 @@ function render(){
   q('#contribution').innerHTML=content.contribution?`<p class="project-kicker">${lang==='es'?'MI PARTICIPACIÓN':'MY CONTRIBUTION'}</p><p>${content.contribution}</p>`:'';
   q('#credits-copy').textContent=content.credits;
   q('#label-concept').textContent=lang==='es'?'ORIGEN / IDEA':'ORIGIN / IDEA';
-  q('#label-research').textContent=lang==='es'?'MATERIA / INTERACCIÓN':'MATERIAL / INTERACTION';
-  q('#label-process').textContent=lang==='es'?'DESARROLLO':'DEVELOPMENT';
+  q('#label-research').textContent=projectKey==='florecimiento-contenido'?(lang==='es'?'EXPERIMENTACIÓN TEXTIL':'TEXTILE EXPERIMENTATION'):(lang==='es'?'MATERIA / INTERACCIÓN':'MATERIAL / INTERACTION');
+  q('#label-process').textContent=projectKey==='florecimiento-contenido'?(lang==='es'?'SISTEMA DE ACTIVACIÓN':'ACTIVATION SYSTEM'):(lang==='es'?'DESARROLLO':'DEVELOPMENT');
   q('#label-result').textContent=lang==='es'?'RESOLUCIÓN':'OUTCOME';
   q('#label-credits').textContent=lang==='es'?'AUTORÍA / PARTICIPACIÓN':'AUTHORSHIP / PARTICIPATION';
   const links=[];
@@ -102,7 +104,7 @@ function prepareScrollComposition(){
   if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
   if(document.body.dataset.scrollMotionReady)return;
   document.body.dataset.scrollMotionReady='true';
-  const vectors={kero:[[-58,54],[46,-28],[-34,42],[26,34]],lacrima:[[0,96],[0,128],[0,74],[0,108]],lithos:[[-52,38],[54,34],[-38,62],[48,46]],aeris:[[-18,78],[24,104],[-14,66],[18,88]]}[projectKey]||[[0,52],[0,72],[0,48],[0,64]];
+  const vectors={kero:[[-58,54],[46,-28],[-34,42],[26,34]],lacrima:[[0,96],[0,128],[0,74],[0,108]],lithos:[[-52,38],[54,34],[-38,62],[48,46]],aeris:[[-18,78],[24,104],[-14,66],[18,88]],'florecimiento-contenido':[[-72,42],[68,-34],[-46,58],[52,30]]}[projectKey]||[[0,52],[0,72],[0,48],[0,64]];
   const ease='cubic-bezier(0.16,1,0.3,1)';
   const play=(element,keyframes,options={})=>element?.animate(keyframes,{duration:780,easing:ease,fill:'none',...options});
   const hero=q('.project-hero');

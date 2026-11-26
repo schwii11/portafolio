@@ -105,5 +105,29 @@ window.PROJECT_CONTENT = {
       credits:'Team project. My contribution included a knitted skirt, a dyed linen top, a gauze covering piece and a faux-leather belt.'
     },
     images:[['../../assets/projects/aeris-01.png','Look Aeris con top azul y falda tejida'],['../../assets/projects/aeris-02.png','Detalle lateral del look Aeris'],['../../assets/projects/aeris-portrait.png','Vista frontal de Aeris y sus texturas superpuestas']]
+  },
+  'florecimiento-contenido': {
+    number:'08', title:'FLORECIMIENTO CONTENIDO', discipline:'EXPERIMENTACIÓN TEXTIL / CUERPO / ACTIVACIÓN', year:'2026', mode:'PROYECTO INDIVIDUAL', accent:'red',
+    es:{
+      lead:'Una estructura textil que transforma su configuración mediante la interacción corporal y explora la tensión entre control y liberación.',
+      concept:['Florecimiento contenido toma como referencia conceptual la Tsubaki, camelia japonesa, para construir un sistema de cuatro flores asimétricas.','Los pétalos se repliegan al tensar los hilos de activación y vuelven a abrirse al liberarlos. El cuerpo deja de ser soporte y se convierte en agente activo de transformación.'],
+      research:['Tul rojo y blanco','Bordado en tres tonalidades de rojo','Puntadas rectas y zigzag','Superposición textil','Estructura de alambre visible','Cuatro flores asimétricas','Tres hilos rojos de activación','Pétalos flexibles'],
+      process:'Las capas de tul bordado se superponen sobre estructuras de alambre para formar pétalos flexibles. Tres hilos vinculados al pulgar, anular y meñique permiten tensar la pieza, cerrar las flores y volver a abrirlas al liberar la mano.',
+      result:'Una pieza performática que establece un diálogo entre fragilidad, contención, movimiento y expansión. La transformación depende de la acción real del cuerpo y permanece visible en sus hilos y estructura.',
+      credits:'Proyecto académico individual de Katalina Ríos.'
+    },
+    en:{
+      lead:'A textile structure transformed through bodily interaction, exploring the tension between control and release.',
+      concept:['Florecimiento contenido takes the Tsubaki, the Japanese camellia, as a conceptual reference for a system of four asymmetrical flowers.','The petals fold when the activation threads are pulled and reopen when released. The body is no longer merely a support; it becomes an active agent of transformation.'],
+      research:['Red and white tulle','Embroidery in three shades of red','Straight and zigzag stitches','Textile layering','Visible wire structure','Four asymmetrical flowers','Three red activation threads','Flexible petals'],
+      process:'Layers of embroidered tulle overlap on wire structures to form flexible petals. Three threads connected to the thumb, ring finger and little finger tension the piece, close the flowers and reopen them when the hand releases.',
+      result:'A performative piece that establishes a dialogue between fragility, restraint, movement and expansion. Its transformation depends on the real action of the body and remains visible through its threads and structure.',
+      credits:'Individual academic project by Katalina Ríos.'
+    },
+    images:[
+      ['../../assets/projects/florecimiento-contenido/florecimiento-maniqui.png','Resultado general de Florecimiento contenido montado sobre maniquí'],
+      ['../../assets/projects/florecimiento-contenido/florecimiento-flores.png','Cuatro flores textiles asimétricas, transparencias e hilos de activación'],
+      ['../../assets/projects/florecimiento-contenido/florecimiento-detalle.png','Detalle ampliado del bordado, las puntadas y la superposición de pétalos']
+    ]
   }
 };

@@ -124,7 +124,7 @@ function prepareScrollComposition(){
 function prepareLightbox(){
   let lightbox=q('#project-lightbox');
   if(!lightbox){
-    document.body.insertAdjacentHTML('beforeend',`<dialog id="project-lightbox" class="project-lightbox" aria-label="Visor de imagen en alta resolución"><div class="project-lightbox__toolbar"><p id="project-lightbox-caption"></p><div><button type="button" data-lightbox-action="out" aria-label="Alejar">−</button><button type="button" data-lightbox-action="reset" aria-label="Restablecer zoom">100%</button><button type="button" data-lightbox-action="in" aria-label="Acercar">+</button><button type="button" data-lightbox-action="close" aria-label="Cerrar visor">CERRAR ×</button></div></div><div class="project-lightbox__stage"><div class="project-lightbox__canvas"><img alt=""></div></div></dialog>`);
+    document.body.insertAdjacentHTML('beforeend',`<dialog id="project-lightbox" class="project-lightbox" aria-label="Visor de imagen en alta resolución"><div class="project-lightbox__toolbar"><p id="project-lightbox-caption"></p><div><button type="button" data-lightbox-action="out" aria-label="Alejar">−</button><button type="button" data-lightbox-action="reset" aria-label="Restablecer zoom">100%</button><button type="button" data-lightbox-action="in" aria-label="Acercar">+</button><button type="button" data-lightbox-action="close" aria-label="Cerrar visor">CERRAR ×</button></div></div><div class="project-lightbox__stage" tabindex="0" aria-label="Imagen ampliada; arrastra o desplázate para recorrerla"><div class="project-lightbox__canvas"><img alt=""></div></div></dialog>`);
     lightbox=q('#project-lightbox');
   }
   const image=q('img',lightbox);
@@ -181,6 +181,8 @@ function prepareLightbox(){
       image.alt=source.alt;
       caption.textContent=source.alt;
       lightbox.showModal();
+      document.documentElement.classList.add('lightbox-open');
+      document.body.classList.add('lightbox-open');
       try{await image.decode()}catch(error){}
       baseWidth=0;
       baseHeight=0;
@@ -192,6 +194,10 @@ function prepareLightbox(){
   });
   if(lightbox.dataset.controlsReady)return;
   lightbox.dataset.controlsReady='true';
+  lightbox.addEventListener('close',()=>{
+    document.documentElement.classList.remove('lightbox-open');
+    document.body.classList.remove('lightbox-open');
+  });
   lightbox.addEventListener('click',event=>{
     const action=event.target.closest('[data-lightbox-action]')?.dataset.lightboxAction;
     if(action==='close')lightbox.close();
@@ -209,12 +215,13 @@ function prepareLightbox(){
   },{passive:false});
   let drag=null;
   stage.addEventListener('pointerdown',event=>{
-    if(zoom<=1)return;
+    if(stage.scrollWidth<=stage.clientWidth&&stage.scrollHeight<=stage.clientHeight)return;
+    event.preventDefault();
     drag={x:event.clientX,y:event.clientY,left:stage.scrollLeft,top:stage.scrollTop};
     stage.classList.add('is-dragging');
-    stage.setPointerCapture(event.pointerId);
+    try{stage.setPointerCapture(event.pointerId)}catch(error){}
   });
-  stage.addEventListener('pointermove',event=>{
+  window.addEventListener('pointermove',event=>{
     if(!drag)return;
     stage.scrollLeft=drag.left-(event.clientX-drag.x);
     stage.scrollTop=drag.top-(event.clientY-drag.y);
@@ -223,10 +230,10 @@ function prepareLightbox(){
     if(!drag)return;
     drag=null;
     stage.classList.remove('is-dragging');
-    if(stage.hasPointerCapture(event.pointerId))stage.releasePointerCapture(event.pointerId);
+    try{if(stage.hasPointerCapture(event.pointerId))stage.releasePointerCapture(event.pointerId)}catch(error){}
   };
-  stage.addEventListener('pointerup',stopDrag);
-  stage.addEventListener('pointercancel',stopDrag);
+  window.addEventListener('pointerup',stopDrag);
+  window.addEventListener('pointercancel',stopDrag);
 }
 
 function prepareTitleInteraction(){

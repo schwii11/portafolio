@@ -1,6 +1,8 @@
 const projectKey=document.body.dataset.project;
 const project=window.PROJECT_CONTENT[projectKey];
 const q=(selector,root=document)=>root.querySelector(selector);
+if('scrollRestoration' in history)history.scrollRestoration='manual';
+addEventListener('pageshow',()=>scrollTo(0,0));
 let lang='es';
 const physicalProjects=['kero','lacrima','lithos','aeris'];
 
@@ -214,26 +216,26 @@ function prepareLightbox(){
     }
   },{passive:false});
   let drag=null;
-  stage.addEventListener('pointerdown',event=>{
+  stage.addEventListener('mousedown',event=>{
+    if(event.button!==0)return;
     if(stage.scrollWidth<=stage.clientWidth&&stage.scrollHeight<=stage.clientHeight)return;
     event.preventDefault();
     drag={x:event.clientX,y:event.clientY,left:stage.scrollLeft,top:stage.scrollTop};
     stage.classList.add('is-dragging');
-    try{stage.setPointerCapture(event.pointerId)}catch(error){}
   });
-  window.addEventListener('pointermove',event=>{
+  document.addEventListener('mousemove',event=>{
     if(!drag)return;
+    event.preventDefault();
     stage.scrollLeft=drag.left-(event.clientX-drag.x);
     stage.scrollTop=drag.top-(event.clientY-drag.y);
   });
-  const stopDrag=event=>{
+  const stopDrag=()=>{
     if(!drag)return;
     drag=null;
     stage.classList.remove('is-dragging');
-    try{if(stage.hasPointerCapture(event.pointerId))stage.releasePointerCapture(event.pointerId)}catch(error){}
   };
-  window.addEventListener('pointerup',stopDrag);
-  window.addEventListener('pointercancel',stopDrag);
+  document.addEventListener('mouseup',stopDrag);
+  addEventListener('blur',stopDrag);
 }
 
 function prepareTitleInteraction(){

@@ -1,3 +1,5 @@
+if('scrollRestoration' in history)history.scrollRestoration='manual';
+addEventListener('pageshow',()=>scrollTo(0,0));
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
 

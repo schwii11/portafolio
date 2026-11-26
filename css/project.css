@@ -328,6 +328,22 @@
 .project-page[data-project="lithos"] .project-image figcaption,
 .project-page[data-project="aeris"] .project-image figcaption{margin-top:20px;padding-right:clamp(8px,2vw,28px)}
 
+/* Contraste editorial para la información que convive con las fotografías. */
+.project-hero:not(.project-hero--digital) .project-hero-media::after{
+  background:
+    linear-gradient(90deg,#101010 0 30%,rgba(16,16,16,.9) 43%,transparent 70%),
+    linear-gradient(0deg,#101010 0,rgba(16,16,16,.94) 18%,rgba(16,16,16,.52) 36%,transparent 58%);
+}
+.project-hero:not(.project-hero--digital) .project-hero__lead{
+  max-width:40ch;
+  padding:clamp(12px,1.2vw,18px) clamp(20px,2.5vw,42px) clamp(12px,1.2vw,18px) 0;
+  text-shadow:0 2px 18px #000,0 1px 3px #000;
+}
+.project-hero:not(.project-hero--digital) .project-hero__meta{
+  color:rgba(242,240,235,.88);
+  text-shadow:0 2px 12px #000;
+}
+
 @media(max-width:900px){
   .project-page[data-project="kero"] .project-hero,
   .project-page[data-project="lacrima"] .project-hero,
@@ -346,4 +362,5 @@
   .project-page[data-project="lacrima"] .project-image,
   .project-page[data-project="lithos"] .project-image,
   .project-page[data-project="aeris"] .project-image{margin-bottom:64px}
+  .project-hero:not(.project-hero--digital) .project-hero__lead{padding-right:0}
 }

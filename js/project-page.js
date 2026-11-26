@@ -2,6 +2,7 @@ const projectKey=document.body.dataset.project;
 const project=window.PROJECT_CONTENT[projectKey];
 const q=(selector,root=document)=>root.querySelector(selector);
 let lang='es';
+const physicalProjects=['kero','lacrima','lithos','aeris'];
 
 const nextRoutes={kero:['lacrima','LACRIMA'],lacrima:['lithos','LITHOS'],lithos:['aeris','AERIS'],aeris:['dos-realidades','PARTITURA CORPORAL'],'dos-realidades':['escuchar-la-imagen','INFANCIAS INTERRUMPIDAS'],'escuchar-la-imagen':['tocar-la-imagen','DESBORDE'],'tocar-la-imagen':['kero','K’ERO']};
 
@@ -77,6 +78,7 @@ function prepareMediaInteraction(){
     if(entry.isIntersecting){entry.target.classList.add('is-in-view');observer.unobserve(entry.target)}
   }),{threshold:.16});
   media.forEach(item=>observer.observe(item));
+  if(physicalProjects.includes(projectKey))prepareLightbox();
   if(!matchMedia('(pointer:fine)').matches)return;
   document.querySelectorAll('.project-image__visual').forEach(frame=>{
     frame.addEventListener('pointermove',event=>{
@@ -91,6 +93,58 @@ function prepareMediaInteraction(){
       frame.style.setProperty('--focus-y','0px');
     });
   });
+}
+
+function prepareLightbox(){
+  let lightbox=q('#project-lightbox');
+  if(!lightbox){
+    document.body.insertAdjacentHTML('beforeend',`<dialog id="project-lightbox" class="project-lightbox" aria-label="Visor de imagen en alta resolución"><div class="project-lightbox__toolbar"><p id="project-lightbox-caption"></p><div><button type="button" data-lightbox-action="out" aria-label="Alejar">−</button><button type="button" data-lightbox-action="reset" aria-label="Restablecer zoom">100%</button><button type="button" data-lightbox-action="in" aria-label="Acercar">+</button><button type="button" data-lightbox-action="close" aria-label="Cerrar visor">CERRAR ×</button></div></div><div class="project-lightbox__stage"><div class="project-lightbox__canvas"><img alt=""></div></div></dialog>`);
+    lightbox=q('#project-lightbox');
+  }
+  const image=q('img',lightbox);
+  const canvas=q('.project-lightbox__canvas',lightbox);
+  const stage=q('.project-lightbox__stage',lightbox);
+  const caption=q('#project-lightbox-caption',lightbox);
+  let zoom=1;
+  const setZoom=value=>{
+    zoom=Math.min(4,Math.max(1,value));
+    canvas.style.width=`${zoom*100}%`;
+    canvas.style.height=`${zoom*100}%`;
+    q('[data-lightbox-action="reset"]',lightbox).textContent=`${Math.round(zoom*100)}%`;
+    if(zoom===1){stage.scrollTop=0;stage.scrollLeft=0}
+  };
+  document.querySelectorAll('.project-image__visual').forEach(frame=>{
+    if(frame.dataset.lightboxReady)return;
+    frame.dataset.lightboxReady='true';
+    frame.setAttribute('role','button');
+    frame.setAttribute('tabindex','0');
+    frame.setAttribute('aria-label','Abrir imagen en pantalla completa');
+    const open=()=>{
+      const source=q('img',frame);
+      image.src=source.currentSrc||source.src;
+      image.alt=source.alt;
+      caption.textContent=source.alt;
+      setZoom(1);
+      lightbox.showModal();
+    };
+    frame.addEventListener('click',open);
+    frame.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();open()}});
+  });
+  if(lightbox.dataset.controlsReady)return;
+  lightbox.dataset.controlsReady='true';
+  lightbox.addEventListener('click',event=>{
+    const action=event.target.closest('[data-lightbox-action]')?.dataset.lightboxAction;
+    if(action==='close')lightbox.close();
+    if(action==='in')setZoom(zoom+.25);
+    if(action==='out')setZoom(zoom-.25);
+    if(action==='reset')setZoom(1);
+    if(event.target===lightbox)lightbox.close();
+  });
+  stage.addEventListener('wheel',event=>{
+    if(!lightbox.open)return;
+    event.preventDefault();
+    setZoom(zoom+(event.deltaY<0?.2:-.2));
+  },{passive:false});
 }
 
 function prepareTitleInteraction(){

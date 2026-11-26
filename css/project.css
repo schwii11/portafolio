@@ -271,7 +271,7 @@
 .project-hero--digital{grid-template-rows:auto auto auto auto;overflow:visible}
 .project-hero--digital h1{grid-column:1/13;grid-row:2;max-width:12ch;margin:clamp(24px,4vw,56px) 0 0;font-size:clamp(4.2rem,7.2vw,8rem);line-height:.8}
 .project-page[data-project="escuchar-la-imagen"] .project-hero--digital h1{max-width:12ch;font-size:clamp(3.7rem,6.4vw,7rem)}
-.project-hero--digital .project-hero-media{grid-column:7/13;grid-row:2/4;align-self:center;aspect-ratio:16/10;margin-top:clamp(8px,1.4vw,22px);box-shadow:none;border:0;background:transparent}
+.project-hero--digital .project-hero-media{grid-column:6/13;grid-row:2/4;align-self:center;aspect-ratio:16/10;margin-top:clamp(8px,1.4vw,22px);box-shadow:none;border:0;background:transparent}
 .project-hero--digital .project-hero__lead{grid-column:1/5;grid-row:3;margin-top:clamp(34px,5vw,74px)}
 .project-hero--digital .project-hero__meta{grid-column:1/5;grid-row:4;margin-top:22px}
 .project-hero--digital .project-links{grid-column:9/13;grid-row:1}
@@ -287,6 +287,38 @@
   .project-hero--digital .project-hero__meta{grid-column:1/5;grid-row:5;margin-top:4px}
   .project-image__visual{aspect-ratio:auto!important}
   .project-image img{height:auto;object-fit:contain!important;object-position:center!important}
+}
+
+/* Visor de alta resolución para los proyectos físicos. */
+.project-page[data-project="kero"] .project-image__visual,
+.project-page[data-project="lacrima"] .project-image__visual,
+.project-page[data-project="lithos"] .project-image__visual,
+.project-page[data-project="aeris"] .project-image__visual{cursor:zoom-in}
+.project-image__visual:focus-visible{outline:2px solid var(--project-accent);outline-offset:6px}
+.project-lightbox{
+  width:100vw;height:100dvh;max-width:none;max-height:none;margin:0;padding:0;
+  border:0;background:#090909;color:var(--paper);overflow:hidden;
+}
+.project-lightbox::backdrop{background:rgba(0,0,0,.96)}
+.project-lightbox__toolbar{
+  position:relative;z-index:2;height:64px;padding:0 clamp(16px,2.4vw,38px);
+  display:flex;align-items:center;justify-content:space-between;gap:20px;
+  background:#101010;border-bottom:1px solid var(--line);
+}
+.project-lightbox__toolbar p{margin:0;max-width:58ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:500 .68rem var(--mono);letter-spacing:.06em;color:rgba(242,240,235,.68)}
+.project-lightbox__toolbar>div{display:flex;align-items:center;gap:8px}
+.project-lightbox button{min-width:42px;height:36px;padding:0 12px;border:1px solid rgba(242,240,235,.28);background:transparent;color:var(--paper);font:500 .68rem var(--mono);letter-spacing:.05em;cursor:pointer}
+.project-lightbox button:hover,.project-lightbox button:focus-visible{border-color:var(--project-accent);color:var(--project-accent)}
+.project-lightbox__stage{height:calc(100dvh - 64px);overflow:auto;overscroll-behavior:contain}
+.project-lightbox__canvas{width:100%;height:100%;min-width:100%;min-height:100%;display:grid;place-items:center}
+.project-lightbox__canvas img{display:block;width:100%;height:100%;max-width:none;max-height:none;object-fit:contain;image-rendering:auto}
+
+@media(max-width:700px){
+  .project-lightbox__toolbar{height:58px;padding:0 12px}
+  .project-lightbox__toolbar p{display:none}
+  .project-lightbox__toolbar>div{width:100%;justify-content:space-between}
+  .project-lightbox__stage{height:calc(100dvh - 58px)}
+  .project-lightbox button{padding:0 9px}
 }
 
 /* Cuatro aperturas físicas, cuatro ritmos editoriales. */
